@@ -23,6 +23,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.example.shopmiphamapp.Bill.BillActivity;
 import com.example.shopmiphamapp.Carousel.CarouselAdapter;
 import com.example.shopmiphamapp.Carousel.CarouselItem;
 import com.example.shopmiphamapp.Cart.CartActivity;
@@ -179,25 +180,22 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         if (itemId == R.id.nav_home) {
             // Handle nav_home
         } else if (itemId == R.id.nav_cart) {
-            if (userJson != null) {
-                Intent intent = new Intent(HomeActivity.this, CartActivity.class);
-                startActivity(intent);
-            }
+            Intent intent = new Intent(HomeActivity.this, CartActivity.class);
+            startActivity(intent);
         } else if (itemId == R.id.nav_logout) {
             FirebaseAuth.getInstance().signOut();
             Intent intent = new Intent(HomeActivity.this, LoginActivity.class);
             startActivity(intent);
             finishAffinity();
         } else if (itemId == R.id.nav_info) {
-            if (userJson != null) {
-                Intent intent = new Intent(HomeActivity.this, InfoUserActivity.class);
-                startActivity(intent);
-            }
+            Intent intent = new Intent(HomeActivity.this, InfoUserActivity.class);
+            startActivity(intent);
         } else if (itemId == R.id.nav_like_product) {
-            if (userJson != null) {
-                Intent intent = new Intent(HomeActivity.this, FavoriteProductActivity.class);
-                startActivity(intent);
-            }
+            Intent intent = new Intent(HomeActivity.this, FavoriteProductActivity.class);
+            startActivity(intent);
+        } else if (itemId == R.id.nav_bill) {
+            Intent intent = new Intent(HomeActivity.this, BillActivity.class);
+            startActivity(intent);
         }
 
         drawerLayout.closeDrawer(GravityCompat.START);

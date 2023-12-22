@@ -57,7 +57,7 @@ public class CategoryProductActivity extends AppCompatActivity {
 
     private void setUi() {
         if (productTypeId != -1) {
-            String productTypeName = shopDatabase.productTypeDAO().getListProductTypeById(productTypeId).getName();
+            String productTypeName = shopDatabase.productTypeDAO().getProductTypeById(productTypeId).getName();
 //            Log.d("productType", productTypeName);
             tvProductType.setText(productTypeName);
         }

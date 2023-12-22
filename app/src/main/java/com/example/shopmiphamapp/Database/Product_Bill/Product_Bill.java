@@ -7,13 +7,13 @@ import androidx.room.PrimaryKey;
 public class Product_Bill {
     @PrimaryKey(autoGenerate = true)
     private int id;
-    private int bill_id;
-    private int product_id;
+    private int billId;
+    private int productId;
     private int quantity;
 
-    public Product_Bill(int bill_id, int product_id, int quantity) {
-        this.bill_id = bill_id;
-        this.product_id = product_id;
+    public Product_Bill(int billId, int productId, int quantity) {
+        this.billId = billId;
+        this.productId = productId;
         this.quantity = quantity;
     }
 
@@ -25,20 +25,20 @@ public class Product_Bill {
         this.id = id;
     }
 
-    public int getBill_id() {
-        return bill_id;
+    public int getBillId() {
+        return billId;
     }
 
-    public void setBill_id(int bill_id) {
-        this.bill_id = bill_id;
+    public void setBillId(int billId) {
+        this.billId = billId;
     }
 
-    public int getProduct_id() {
-        return product_id;
+    public int getProductId() {
+        return productId;
     }
 
-    public void setProduct_id(int product_id) {
-        this.product_id = product_id;
+    public void setProductId(int productId) {
+        this.productId = productId;
     }
 
     public int getQuantity() {

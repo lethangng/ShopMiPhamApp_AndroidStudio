@@ -25,6 +25,7 @@ import com.example.shopmiphamapp.Database.Product.Product;
 import com.example.shopmiphamapp.Database.ShopDatabase;
 import com.example.shopmiphamapp.Database.User.User;
 import com.example.shopmiphamapp.FavoriteProduct.FavoriteProductActivity;
+import com.example.shopmiphamapp.Helper.Helper;
 import com.example.shopmiphamapp.Home.HomeActivity;
 import com.example.shopmiphamapp.R;
 import com.google.gson.Gson;
@@ -105,21 +106,13 @@ public class DetailProductActivity extends AppCompatActivity {
     private void setUi(int productId) {
         Product product = shopDatabase.productDAO().getProductById(productId);
         product_desc.setText(HtmlCompat.fromHtml(product.getDescription(), HtmlCompat.FROM_HTML_MODE_LEGACY));
-        product_price.setText(String.valueOf(product.getPrice()) + "đ");
+        String price = Helper.formatPrice(product.getPrice());
+        product_price.setText(price);
         product_name.setText(product.getName());
 
-        float soldProductNumber = product.getSold();
-        String stringSold;
+        String sold = Helper.formatSold(product.getSold());
 
-        if (soldProductNumber >= 1000) {
-            soldProductNumber /= 1000;
-            DecimalFormat decimalFormat = new DecimalFormat("#.#"); // Định dạng số sau dấu phẩy
-            stringSold = decimalFormat.format(soldProductNumber) + "k";
-        } else {
-            stringSold = String.valueOf((int) soldProductNumber);
-        }
-
-        product_sold.setText("Đã bán " + stringSold + " sp.");
+        product_sold.setText(sold);
         String productType = shopDatabase.productDAO().getProductType(product.getProductId());
         product_type.setText(productType);
 

@@ -10,6 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.shopmiphamapp.Helper.Helper;
 import com.example.shopmiphamapp.R;
 
 import java.util.List;
@@ -37,7 +38,8 @@ public class PayAdapter extends RecyclerView.Adapter<PayAdapter.PayViewHodel> {
         holder.img_product.setImageResource(payItem.getImgId());
         holder.tv_product_name.setText(payItem.getProductName());
         holder.tv_type_product.setText(payItem.getProductType());
-        holder.tv_price.setText(String.valueOf(payItem.getPrice()) + "đ");
+        String price = Helper.formatPrice(payItem.getPrice());
+        holder.tv_price.setText(price);
         holder.tv_pay_count.setText("x" + String.valueOf(payItem.getCount()));
 
     }

@@ -1,26 +1,36 @@
-package com.example.shopmiphamapp.Cart;
+package com.example.shopmiphamapp.Bill;
 
-public class CartItem {
-    private int cartId, productId;
-    private int imgId, price, count;
+public class BillItem {
+    private int billId;
+    private int productId, imgId, price, count, totalPrice, sumProduct;
     private String productName, productType;
 
-    public CartItem(int cartId,int productId, int imgId, String productName, String productType, int price) {
-        this.cartId = cartId;
+    public BillItem(int billId, int productId, int imgId, int price, int count, int totalPrice, String productName, String productType, int sumProduct) {
+        this.billId = billId;
         this.productId = productId;
         this.imgId = imgId;
         this.price = price;
+        this.count = count;
+        this.totalPrice = totalPrice;
         this.productName = productName;
         this.productType = productType;
-        this.count = 1;
+        this.sumProduct = sumProduct;
     }
 
-    public int getCartId() {
-        return cartId;
+    public int getBillId() {
+        return billId;
     }
 
-    public void setCartId(int cartId) {
-        this.cartId = cartId;
+    public void setBillId(int billId) {
+        this.billId = billId;
+    }
+
+    public int getSumProduct() {
+        return sumProduct;
+    }
+
+    public void setSumProduct(int sumProduct) {
+        this.sumProduct = sumProduct;
     }
 
     public int getProductId() {
@@ -53,6 +63,14 @@ public class CartItem {
 
     public void setCount(int count) {
         this.count = count;
+    }
+
+    public int getTotalPrice() {
+        return totalPrice;
+    }
+
+    public void setTotalPrice(int totalPrice) {
+        this.totalPrice = totalPrice;
     }
 
     public String getProductName() {

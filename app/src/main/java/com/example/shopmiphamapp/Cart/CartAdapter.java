@@ -18,6 +18,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.shopmiphamapp.Database.ShopDatabase;
+import com.example.shopmiphamapp.Helper.Helper;
 import com.example.shopmiphamapp.R;
 
 import java.util.ArrayList;
@@ -70,7 +71,9 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHodel>
         holder.img_cart.setImageResource(cartItem.getImgId());
         holder.tv_product_name.setText(cartItem.getProductName());
         holder.tv_type_product.setText(cartItem.getProductType());
-        holder.tv_price.setText(String.valueOf(cartItem.getPrice()) + "đ");
+
+        String price = Helper.formatPrice(cartItem.getPrice());
+        holder.tv_price.setText(price);
 
         int[] count = {listCart.get(position).getCount()};
         holder.tv_count.setText(String.valueOf(count[0]));

@@ -11,13 +11,17 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.shopmiphamapp.Cart.CartItem;
+import com.example.shopmiphamapp.Database.Bill.Bill;
+import com.example.shopmiphamapp.Database.Product_Bill.Product_Bill;
 import com.example.shopmiphamapp.Database.ShopDatabase;
+import com.example.shopmiphamapp.Database.User.User;
 import com.example.shopmiphamapp.Home.HomeActivity;
 import com.example.shopmiphamapp.R;
 import com.google.gson.Gson;
@@ -25,6 +29,8 @@ import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class PayActivity extends AppCompatActivity {
@@ -39,12 +45,14 @@ public class PayActivity extends AppCompatActivity {
     List<CartItem> cartItemSelects;
     private int totalPrice;
 
+    private User user;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pay);
 
         shopDatabase = ShopDatabase.getInstance(this);
+        user = HomeActivity.userPublic;
 
         // Lấy các item từ bên CartActivity chuyển sang
         String selectItemsJson = getIntent().getStringExtra("selectItemsJson");
@@ -61,6 +69,11 @@ public class PayActivity extends AppCompatActivity {
         recyclerViewCart();
         setUi();
         initListener();
+
+//        Calendar calendar = Calendar.getInstance();
+//        Date currentDate = calendar.getTime();
+//        long dateNow = currentDate.getTime();
+//        Log.d("dateNow", String.valueOf(currentDate));
 
     }
 
@@ -90,6 +103,19 @@ public class PayActivity extends AppCompatActivity {
                 }
                 for (CartItem cartItem : cartItemSelects) {
                     shopDatabase.cartDAO().deleteCart(cartItem.getCartId());
+                }
+
+                Calendar calendar = Calendar.getInstance();
+                Date currentDate = calendar.getTime();
+                long dateNow = currentDate.getTime();
+
+                Bill bill = new Bill(dateNow, address, totalPrice, user.getUserId());
+                // Them bill và lấy ra id của bill vừa thêm để lấy đấy làm tham số insert vào productBill
+                int billId = (int) shopDatabase.billDAO().insertBill(bill);
+
+                for (CartItem cartItem : cartItemSelects) {
+                    Product_Bill productBill = new Product_Bill(billId, cartItem.getProductId(), cartItem.getCount());
+                    shopDatabase.productBillDAO().insertProductBill(productBill);
                 }
 
                 Toast.makeText(PayActivity.this, "Mua hàng thành công!", Toast.LENGTH_LONG).show();

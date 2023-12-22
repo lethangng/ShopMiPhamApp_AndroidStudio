@@ -132,7 +132,7 @@ public class CartActivity extends AppCompatActivity {
             Product product = shopDatabase.cartDAO().getListProductCartById(carts.get(i).getProductId());
 //            Log.d(">>> check", product.getName());
             String productType = shopDatabase.productDAO().getProductType(product.getProductId());
-            list.add(new CartItem(carts.get(i).getCartId(), product.getImgProduct(),
+            list.add(new CartItem(carts.get(i).getCartId(), product.getProductId(), product.getImgProduct(),
                     product.getName(), productType, product.getPrice()));
         }
 //        list.add(new CartItem(1, R.drawable.loginimg, "San pham 1", "Nuoc hoa", 20000));

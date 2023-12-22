@@ -14,6 +14,6 @@ public interface ProductTypeDAO {
     List<ProductType> getListProductType();
 
     @Query("SELECT * FROM product_type where productTypeId= :productTypeId Limit 1")
-    ProductType getListProductTypeById(int productTypeId);
+    ProductType getProductTypeById(int productTypeId);
 
 }

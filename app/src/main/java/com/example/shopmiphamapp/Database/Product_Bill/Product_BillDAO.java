@@ -10,6 +10,6 @@ public interface Product_BillDAO {
     @Insert
     void insertProductBill(Product_Bill product_bill);
 
-    @Query("SELECT * FROM product_bill")
-    List<Product_Bill> getListProductBill();
+    @Query("SELECT * FROM product_bill WHERE billId= :billId")
+    List<Product_Bill> getListProductBill(int billId);
 }

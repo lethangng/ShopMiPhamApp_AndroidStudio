@@ -11,6 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.shopmiphamapp.Helper.Helper;
 import com.example.shopmiphamapp.R;
 
 import java.text.DecimalFormat;
@@ -52,19 +53,12 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
         }
         holder.imgProduct.setImageResource(productItem.getImage());
         holder.nameProduct.setText(productItem.getName());
-        holder.priceProduct.setText(String.valueOf(productItem.getPrice()) + "đ");
-        float soldProductNumber = productItem.getSold();
-        String stringSold;
+        String price = Helper.formatPrice(productItem.getPrice());
+        holder.priceProduct.setText(price);
 
-        if (soldProductNumber >= 1000) {
-            soldProductNumber /= 1000;
-            DecimalFormat decimalFormat = new DecimalFormat("#.#"); // Định dạng số sau dấu phẩy
-            stringSold = decimalFormat.format(soldProductNumber) + "k";
-        } else {
-            stringSold = String.valueOf((int) soldProductNumber);
-        }
+        String sold = Helper.formatSold(productItem.getSold());
 
-        holder.soldProduct.setText("Đã bán " + stringSold + " sp.");
+        holder.soldProduct.setText(sold);
         holder.productType.setText(productItem.getProductType());
 
         // Xu ly su kien click, duoc su dung o activity cha
@@ -99,6 +93,4 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
             productType = itemView.findViewById(R.id.product_type);
         }
     }
-
-
 }
