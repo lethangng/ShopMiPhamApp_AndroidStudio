@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.drawerlayout.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawer_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#f7f7f7"
+    android:backgroundTint="@color/white"
+    android:fitsSystemWindows="true"
+    tools:context=".Home.HomeActivity"
+    tools:openDrawer="start">
+
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/nav_view"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:backgroundTint="#fff"
+        android:fitsSystemWindows="true"
+        app:headerLayout="@layout/header"
+        app:itemBackground="@drawable/navigation_item_background"
+        app:itemTextColor="@color/black"
+        app:menu="@menu/main_menu" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/lavender"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingVertical="10dp"
+            android:paddingHorizontal="10dp">
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:layout_marginRight="5dp"
+                app:navigationIcon="@drawable/ic_bars"
+                android:background="@color/white"/>
+
+            <EditText
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/edit_text_bg"
+                android:hint="Tìm kiếm..."
+                android:inputType="text"
+                android:paddingHorizontal="20dp"
+                android:paddingVertical="10dp"
+                android:textColor="@color/lavender"
+                android:textColorHint="@color/gray" />
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <ImageButton
+                    android:id="@+id/btn_cart"
+                    android:layout_width="42dp"
+                    android:layout_height="42dp"
+                    android:backgroundTint="@color/lavender"
+                    android:padding="15dp"
+                    android:src="@drawable/baseline_shopping_cart_24"
+                    app:tint="@color/white" />
+                <androidx.cardview.widget.CardView
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:layout_alignEnd="@id/btn_cart"
+                    android:layout_alignTop="@id/btn_cart"
+                    android:layout_marginRight="5dp"
+                    app:cardCornerRadius="50dp"
+                    android:backgroundTint="@color/red">
+                    <TextView
+                        android:id="@+id/count_cart"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="10sp"
+                        android:layout_gravity="center"
+                        android:textColor="@color/white"
+                        android:text="3"/>
+                </androidx.cardview.widget.CardView>
+            </RelativeLayout>
+
+            <ImageButton
+                android:id="@+id/btn_chat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/baseline_chat_24"
+                android:backgroundTint="@color/lavender"/>
+        </LinearLayout>
+
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_weight="1"
+            android:fillViewport="true"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <include layout="@layout/layout_carousel" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <include
+                        layout="@layout/category_product"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Danh sách sản phẩm"
+                        android:textSize="30sp"
+                        android:layout_marginLeft="10dp"
+                        android:textColor="@color/lavender"
+                        android:layout_marginBottom="15dp"/>
+                    <include
+                        layout="@layout/rcv_product"/>
+                </LinearLayout>
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+    </LinearLayout>
+
+</androidx.drawerlayout.widget.DrawerLayout>

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <application
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.ShopMiPhamApp"
+        tools:targetApi="31">
+        <activity
+            android:name=".Pay.PayActivity"
+            android:exported="false"
+            android:parentActivityName=".Home.HomeActivity"
+            android:windowSoftInputMode="adjustResize"/>
+        <activity
+            android:name=".FavoriteProduct.FavoriteProductActivity"
+            android:exported="false"
+            android:parentActivityName=".Home.HomeActivity" />
+        <activity
+            android:name=".User.InfoUserActivity"
+            android:exported="false"
+            android:parentActivityName=".Home.HomeActivity" />
+        <activity
+            android:name=".Category.CategoryProductActivity"
+            android:exported="false"
+            android:parentActivityName=".Home.HomeActivity" />
+        <activity
+            android:name=".Product.DetailProductActivity"
+            android:exported="false"
+            android:parentActivityName=".Home.HomeActivity" />
+        <activity
+            android:name=".Cart.CartActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Home.MainActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".Home.HomeActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Login.LoginActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Category.CategoryActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Login.RegiterActivity"
+            android:exported="false" />
+    </application>
+
+</manifest>

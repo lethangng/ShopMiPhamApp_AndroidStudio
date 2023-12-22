@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".User.InfoUserActivity">
+
+    <RelativeLayout
+        android:id="@+id/wrap_header"
+        android:layout_alignParentTop="true"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="horizontal">
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/back_navigation"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentTop="true"
+            app:layout_scrollFlags="scroll|enterAlways"
+            app:navigationIcon="@drawable/baseline_arrow_back_24"
+            android:background="@color/lavender">
+        </androidx.appcompat.widget.Toolbar>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:background="@drawable/bg_info_user">
+
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="58dp"
+            android:foregroundGravity="center_horizontal"
+            android:scaleType="centerCrop"
+            android:src="@drawable/loginimg"
+            app:riv_corner_radius="50dp" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <TextView
+            android:id="@+id/username"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:drawableLeft="@drawable/baseline_person_24"
+            android:drawablePadding="8dp"
+            android:padding="8dp"
+            android:layout_marginTop="15px"
+            android:text="admin"
+            android:textColor="@color/lavender"
+            android:background="@drawable/bg_border"
+            android:textSize="20sp" />
+
+        <TextView
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:id="@+id/name"
+            android:textColor="@color/lavender"
+            android:layout_marginTop="20dp"
+            android:padding="8dp"
+            android:textSize="20sp"
+            android:text="Lê Ngọc Thắng"
+            android:drawableLeft="@drawable/ic_user"
+            android:drawablePadding="8dp"
+            android:background="@drawable/bg_border"/>
+        <TextView
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:id="@+id/phone_number"
+            android:textColor="@color/lavender"
+            android:layout_marginTop="20dp"
+            android:padding="8dp"
+            android:text="02345"
+            android:textSize="20sp"
+            android:drawableLeft="@drawable/ic_phone"
+            android:drawablePadding="8dp"
+            android:background="@drawable/bg_border"/>
+
+        <EditText
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:id="@+id/address"
+            android:textColor="@color/lavender"
+            android:layout_marginTop="20dp"
+            android:padding="8dp"
+            android:text="Địa chỉ"
+            android:textSize="20sp"
+            android:drawableLeft="@drawable/ic_address"
+            android:drawablePadding="8dp"
+            android:background="@drawable/bg_border"/>
+
+        <TextView
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:id="@+id/gender"
+            android:textColor="@color/lavender"
+            android:layout_marginTop="20dp"
+            android:padding="8dp"
+            android:text="Nam"
+            android:textSize="20sp"
+            android:drawableLeft="@drawable/ic_gender"
+            android:drawablePadding="8dp"
+            android:background="@drawable/bg_border"/>
+    </LinearLayout>
+
+
+</LinearLayout>

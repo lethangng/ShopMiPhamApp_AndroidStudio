@@ -1,0 +1,4 @@
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_checked="true" android:drawable="@color/lavender" /> <!-- Màu sắc khi mục được kích hoạt -->
+    <item android:drawable="@android:color/transparent" /> <!-- Màu sắc mặc định cho các mục khác -->
+</selector>

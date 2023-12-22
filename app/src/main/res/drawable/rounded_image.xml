@@ -1,0 +1,4 @@
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="@android:color/transparent" /> <!-- Màu nền trong suốt -->
+    <corners android:radius="50dp" /> <!-- Bán kính là 50dp (có thể thay đổi theo ý muốn) -->
+</shape>

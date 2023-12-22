@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/lavender"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingVertical="10dp"
+        android:paddingHorizontal="10dp">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:layout_marginRight="5dp"
+            android:background="@color/white"
+            app:navigationIcon="@drawable/baseline_menu_24" />
+
+        <EditText
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/edit_text_bg"
+            android:hint="Search..."
+            android:inputType="text"
+            android:paddingHorizontal="20dp"
+            android:paddingVertical="10dp"
+            android:textColor="@color/lavender"
+            android:textColorHint="#808080" />
+
+        <ImageButton
+            android:id="@+id/btn_cart"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:backgroundTint="@color/lavender"
+            android:padding="15dp"
+            android:src="@drawable/baseline_shopping_cart_24"
+            app:tint="@color/white" />
+        <ImageButton
+            android:id="@+id/btn_chat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/baseline_chat_24"
+            android:backgroundTint="@color/lavender"/>
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Product.DetailProductActivity">
+    <RelativeLayout
+        android:id="@+id/wrap_header"
+        android:layout_alignParentTop="true"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="horizontal">
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/back_navigation"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentTop="true"
+            app:layout_scrollFlags="scroll|enterAlways"
+            app:navigationIcon="@drawable/baseline_arrow_back_24"
+            android:background="@color/lavender">
+        </androidx.appcompat.widget.Toolbar>
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="5dp"
+            android:layout_toStartOf="@+id/wrap_btn_cart"
+            android:backgroundTint="@color/lavender"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentBottom="true"
+            android:src="@drawable/baseline_chat_24" />
+
+        <RelativeLayout
+            android:id="@+id/wrap_btn_cart"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="15dp">
+            <ImageButton
+                android:id="@+id/btn_cart"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:backgroundTint="@color/lavender"
+                android:padding="15dp"
+                android:src="@drawable/baseline_shopping_cart_24"
+                app:tint="@color/white" />
+            <androidx.cardview.widget.CardView
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:layout_alignEnd="@id/btn_cart"
+                android:layout_alignTop="@id/btn_cart"
+                android:layout_marginRight="5dp"
+                app:cardCornerRadius="50dp"
+                android:backgroundTint="@color/red">
+                <TextView
+                    android:id="@+id/count_cart"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="10sp"
+                    android:layout_gravity="center"
+                    android:textColor="@color/white"
+                    android:text="3"/>
+            </androidx.cardview.widget.CardView>
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <androidx.core.widget.NestedScrollView
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:layout_below="@+id/wrap_header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <include
+                layout="@layout/layout_carousel"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginHorizontal="10dp">
+                <TextView
+                    android:id="@+id/product_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Nước hoa hồng"
+                    android:textSize="20sp"
+                    android:layout_marginBottom="10dp"
+                    android:textColor="#000"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Giá: "
+                        android:textSize="18sp"/>
+                    <TextView
+                        android:id="@+id/product_price"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="200000đ"
+                        android:textSize="18sp"
+                        android:layout_marginBottom="5dp"
+                        android:textColor="#ff0000"/>
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Loại sản phẩm: "
+                        android:textSize="20sp"/>
+                    <TextView
+                        android:id="@+id/product_type"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Nước hoa hồng"
+                        android:textColor="#000"
+                        android:textSize="20sp"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:orientation="horizontal">
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/baseline_star_24"/>
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/baseline_star_24"/>
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/baseline_star_24"/>
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/baseline_star_24"/>
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/baseline_star_24"/>
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_gravity="center"
+                        android:text="4.9"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="|"
+                        android:layout_gravity="center"
+                        android:layout_marginHorizontal="5dp"/>
+                    <TextView
+                        android:id="@+id/product_sold"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="Đã bán 100k"/>
+                    <View
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"/>
+                    <ImageButton
+                        android:id="@+id/btn_heart"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="20dp"
+                        android:backgroundTint="@color/white"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_heart"/>
+                </LinearLayout>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/lavender"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Mô tả sản phẩm"
+                    android:layout_marginTop="10dp"
+                    android:textColor="@color/black"
+                    android:layout_marginBottom="10dp"
+                    android:textSize="18sp"/>
+                <TextView
+                    android:id="@+id/product_desc"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="#000"
+                    android:layout_marginBottom="60dp"
+                    android:text="Nước Hoa Shimang Bản Cao Cấp Eau De Cologne EDP 50M\n\nThương hiệu: Shimang\n- Xuất xứ: Nội Địa Trung Quốc\n- Tên và địa chỉ của cá nhân chịu trách nhiệm về hàng hóa:\n+ Sản phẩm được phân phối bởi: Chustore2017\n+ Địa chỉ: Tòa A3 chung cư An Bình City - 232 Phạm văn Đồng, Bắc Từ Liêm, Hà Nội\n\nDung tích: 50ML\nQuy cách đóng gói: Full Box\nĐối tượng sử dụng: Phù hợp với cả nam và nữ\n\nE này đc khen là giữ hương 6-8 tiếng luôn đó. Mùi dịu dàng ngọt ngào chứ k hề hắc ạ.\nCó cả mùi hoa quả. Mùi mang tính ấm phù hợp mùa thu và đông.\n\nPhân loại mùi hương:\n- Scent of tea: Hương thơm trà không ngọt dành cho nam và nữ. Hương đầu là mùi trà hoa cam.\n+ Hương giữa là bạch đậu khấu.\n+ Hương cuối là mùi hoa nhài và gỗ mun"
+                    android:textAppearance="@android:style/TextAppearance.Material"/>
+
+            </LinearLayout>
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_height="50dp"
+        android:weightSum="2"
+        android:layout_alignParentBottom="true">
+
+        <ImageButton
+            android:id="@+id/btn_add_cart"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/bg_border_top"
+            android:src="@drawable/shopping_cart_icon" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="Mua ngay"
+            android:gravity="center"
+            android:textSize="18dp"
+            android:textColor="@color/white"
+            android:background="@color/lavender"/>
+    </LinearLayout>
+</RelativeLayout>

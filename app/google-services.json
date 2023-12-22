@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "383235539804",
+    "project_id": "shopmiphamapp",
+    "storage_bucket": "shopmiphamapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:383235539804:android:0539f07ca58fe7b4d57799",
+        "android_client_info": {
+          "package_name": "com.example.shopmiphamapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDY32PACsvHORobjLTa71JGFqCyYIl4KuI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
