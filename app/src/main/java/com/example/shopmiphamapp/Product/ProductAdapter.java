@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -13,8 +14,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.shopmiphamapp.Helper.Helper;
 import com.example.shopmiphamapp.R;
-
-import java.text.DecimalFormat;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
 import java.util.List;
 
 public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductViewHolder>  {
@@ -51,7 +52,29 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
         if (productItem == null) {
             return;
         }
-        holder.imgProduct.setImageResource(productItem.getImage());
+
+        Picasso.get()
+                .load(productItem.getImage())
+                .placeholder(R.drawable.layout_none) // Ảnh placeholder hiển thị trong quá trình tải
+                .error(R.drawable.layout_none) // Ảnh hiển thị khi có lỗi xảy ra
+                .into(holder.imgProduct, new Callback() {
+                    @Override
+                    public void onSuccess() {
+                        // Quá trình tải ảnh thành công, ẩn ProgressBar và hiển thị ImageView
+                        holder.progressBar.setVisibility(View.GONE);
+                        holder.imgProduct.setVisibility(View.VISIBLE);
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+                        // Xử lý khi có lỗi xảy ra trong quá trình tải ảnh
+                        holder.progressBar.setVisibility(View.GONE);
+                        Log.d("errors", e.toString());
+                        throw new RuntimeException(e);
+                    }
+                });
+
+//        holder.imgProduct.setImageResource(R.drawable.product_1);
         holder.nameProduct.setText(productItem.getName());
         String price = Helper.formatPrice(productItem.getPrice());
         holder.priceProduct.setText(price);
@@ -84,13 +107,16 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
     public class ProductViewHolder extends RecyclerView.ViewHolder {
         private ImageView imgProduct;
         private TextView nameProduct, priceProduct, soldProduct, productType;
+        private ProgressBar progressBar;
         public ProductViewHolder(@NonNull View itemView) {
             super(itemView);
+
             imgProduct = itemView.findViewById(R.id.img_product);
             nameProduct = itemView.findViewById(R.id.name_product);
             priceProduct = itemView.findViewById(R.id.price_product);
             soldProduct = itemView.findViewById(R.id.sold_product);
             productType = itemView.findViewById(R.id.product_type);
+            progressBar = itemView.findViewById(R.id.progressBar);
         }
     }
 }

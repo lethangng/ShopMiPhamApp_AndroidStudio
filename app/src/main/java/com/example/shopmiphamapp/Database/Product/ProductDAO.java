@@ -25,7 +25,15 @@ public interface ProductDAO {
     @Query("SELECT * FROM product where productTypeId = :productTypeId")
     List<Product> getProductByProductTypeId(int productTypeId);
 
+    @Query("SELECT * FROM product where name LIKE :name")
+    List<Product> getProductByName(String name);
+
     @Query("SELECT product_type.name FROM product_type INNER JOIN product " +
             "where product.productTypeId = product_type.productTypeId AND productId = :productId LIMIT 1")
     String getProductType(int productId);
+
+    @Query("DELETE FROM product")
+    void deleteAllProducts();
+    @Query("DELETE FROM sqlite_sequence WHERE name='product'")
+    void resetProductId();
 }

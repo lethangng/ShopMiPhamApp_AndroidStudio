@@ -1,10 +1,14 @@
 package com.example.shopmiphamapp.Login;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import android.text.TextUtils;
 import android.text.method.HideReturnsTransformationMethod;
@@ -32,10 +36,11 @@ public class LoginActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private EditText edtUsername, edtPassword;
     private Button btnLogin;
-    private TextView tvRegiter;
+    private TextView tvRegiter, tv_forgetPassword;
 
     private ImageButton ibtn_eye;
     boolean show = false;
+    int REQUEST_CODE = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +48,30 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         initUi();
+        initListener();
 
+        // Hỏi xem có cho phép quyền truy cập bo nhớ không
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_CODE);}
+
+    }
+
+    private void initUi() {
+        progressBar = findViewById(R.id.progressBar);
+        progressBar.setVisibility(View.GONE);
+        mAuth = FirebaseAuth.getInstance();
+
+        edtUsername = findViewById(R.id.username);
+        edtPassword = findViewById(R.id.password);
+        btnLogin = findViewById(R.id.btnLogin);
+        tvRegiter = findViewById(R.id.tv_regiter);
+        ibtn_eye = findViewById(R.id.ibtn_eye);
+
+
+        tv_forgetPassword = findViewById(R.id.tv_forgetPassword);
+    }
+
+    private void initListener() {
         ibtn_eye.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -62,7 +90,6 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 login();
-
             }
         });
 
@@ -73,18 +100,14 @@ public class LoginActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-    }
 
-    private void initUi() {
-        progressBar = findViewById(R.id.progressBar);
-        progressBar.setVisibility(View.GONE);
-        mAuth = FirebaseAuth.getInstance();
-
-        edtUsername = findViewById(R.id.username);
-        edtPassword = findViewById(R.id.password);
-        btnLogin = findViewById(R.id.btnLogin);
-        tvRegiter = findViewById(R.id.tv_regiter);
-        ibtn_eye = findViewById(R.id.ibtn_eye);
+        tv_forgetPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(LoginActivity.this, ForgetPasswordActivity.class);
+                startActivity(intent);
+            }
+        });
     }
     private void login() {
         String email = edtUsername.getText().toString().trim();

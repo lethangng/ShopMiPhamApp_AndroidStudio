@@ -7,9 +7,9 @@ import androidx.room.PrimaryKey;
 public class Carousel {
     @PrimaryKey(autoGenerate = true)
     private int carouselId;
-    private int carouselImg;
+    private String carouselImg;
 
-    public Carousel(int carouselImg) {
+    public Carousel(String carouselImg) {
         this.carouselImg = carouselImg;
     }
 
@@ -21,11 +21,11 @@ public class Carousel {
         this.carouselId = carouselId;
     }
 
-    public int getCarouselImg() {
+    public String getCarouselImg() {
         return carouselImg;
     }
 
-    public void setCarouselImg(int carouselImg) {
+    public void setCarouselImg(String carouselImg) {
         this.carouselImg = carouselImg;
     }
 }

@@ -5,14 +5,18 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.TextUtils;
-import android.util.Log;
+import android.text.method.HideReturnsTransformationMethod;
+import android.text.method.PasswordTransformationMethod;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.shopmiphamapp.Database.ShopDatabase;
@@ -20,19 +24,29 @@ import com.example.shopmiphamapp.Database.User.User;
 import com.example.shopmiphamapp.Home.HomeActivity;
 import com.example.shopmiphamapp.R;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class RegiterActivity extends AppCompatActivity {
     private EditText edtUsername, edtPassword, edtName, edtPhoneNumber, edtConfirmPassword, edtAddress;
     private Button btnRegiter;
+
+    private ImageButton btn_eye_confirmPassword, btn_eye_password;
     private RadioGroup rdoGroup;
     private RadioButton rdoMale, rdoFemale;
+
+    private TextView tv_login;
     private int gender = 0;
 
-    ProgressBar progressBar;
+    private boolean showPassword = false;
+    private boolean showConfirmPassword = false;
+
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,12 +55,7 @@ public class RegiterActivity extends AppCompatActivity {
 
         initUi();
 
-        btnRegiter.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onClickRegiter();
-            }
-        });
+        initListener();
     }
 
     private void initUi() {
@@ -63,6 +72,54 @@ public class RegiterActivity extends AppCompatActivity {
         btnRegiter = (Button) findViewById(R.id.btnRegiter);
         edtConfirmPassword = findViewById(R.id.confirm_password);
         edtAddress = findViewById(R.id.address);
+
+        btn_eye_confirmPassword = findViewById(R.id.btn_eye_confirmPassword);
+        btn_eye_password = findViewById(R.id.btn_eye_password);
+        tv_login = findViewById(R.id.tv_login);
+    }
+
+    private void initListener() {
+        btnRegiter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onClickRegiter();
+            }
+        });
+
+        tv_login.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(RegiterActivity.this, LoginActivity.class);
+                startActivity(intent);
+            }
+        });
+        btn_eye_password.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showPassword = !showPassword;
+                if (showPassword) {
+                    btn_eye_password.setImageResource(R.drawable.ic_eye);
+                    edtPassword.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+                } else {
+                    btn_eye_password.setImageResource(R.drawable.ic_eye2);
+                    edtPassword.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                }
+            }
+        });
+
+        btn_eye_confirmPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showConfirmPassword = !showConfirmPassword;
+                if (showConfirmPassword) {
+                    btn_eye_confirmPassword.setImageResource(R.drawable.ic_eye);
+                    edtConfirmPassword.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+                } else {
+                    btn_eye_confirmPassword.setImageResource(R.drawable.ic_eye2);
+                    edtConfirmPassword.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                }
+            }
+        });
     }
 
     private void onClickRegiter() {
@@ -86,9 +143,9 @@ public class RegiterActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
 //                            FirebaseUser user = mAuth.getCurrentUser();
                             addUser(email, password, name, phoneNumber, address);
+
                             Intent intent = new Intent(RegiterActivity.this, LoginActivity.class);
                             startActivity(intent);
-
                             // Đóng tất cả các Activity trước nó
                             finishAffinity();
                         } else {
@@ -111,9 +168,25 @@ public class RegiterActivity extends AppCompatActivity {
             }
         });
 
-        User user = new User(username, password, R.drawable.img_avatar, gender, name, phoneNumber, address);
-        ShopDatabase.getInstance(this).userDAO().insertUser(user);
-//        Toast.makeText(this, "Đăng ký thành công!", Toast.LENGTH_LONG).show();
+        User user = new User(username, password,
+                "https://firebasestorage.googleapis.com/v0/b/shopmiphamapp.appspot.com/o/img_avatar.png?alt=media&token=a18fb5b2-37dc-47af-8a6d-861ece6ca6a1"
+                , gender, name, phoneNumber, address);
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("user").add(user).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        Toast.makeText(RegiterActivity.this, "Đăng ký thành công.", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        // Xử lý khi thêm thất bại
+                        throw new RuntimeException(e.toString());
+                    }
+                });;
+
+//        ShopDatabase.getInstance(this).userDAO().insertUser(user);
     }
 
     private boolean validateUser(String email, String password, String name, String phoneNumber, String confirmPassword, String address) {

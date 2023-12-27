@@ -1,36 +1,32 @@
 package com.example.shopmiphamapp.Category;
 
-import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
-import com.example.shopmiphamapp.Category.CategoryItem;
-import com.example.shopmiphamapp.Product.ProductAdapter;
-import com.example.shopmiphamapp.Product.ProductItem;
 import com.example.shopmiphamapp.R;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.RecyclerView.Adapter;
+
 public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.CategoryViewHolder> {
     private Context mContext;
     private List<CategoryItem> lCategory;
-    private CategoryAdapter.OnItemClickListener listener;
+    private OnItemClickListener listener;
     public interface OnItemClickListener {
         void onItemClick(CategoryItem item);
     }
 
-    public void setOnItemClickListener(CategoryAdapter.OnItemClickListener listener) {
+    public void setOnItemClickListener(OnItemClickListener listener) {
         this.listener = listener;
     }
 
@@ -46,7 +42,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
     @NonNull
     @Override
     public CategoryViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_category_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_category, parent, false);
         return new CategoryViewHolder(view);
     }
 
@@ -56,7 +52,31 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
         if (categoryItem == null) {
             return;
         }
-        holder.imgCategory.setImageResource(categoryItem.getImage());
+
+//        holder.progressBar.setVisibility(View.VISIBLE);
+
+        Picasso.get()
+                .load(categoryItem.getImageURL())
+                .placeholder(R.drawable.layout_none) // Ảnh placeholder hiển thị trong quá trình tải
+                .error(R.drawable.layout_none) // Ảnh hiển thị khi có lỗi xảy ra
+                .into(holder.imgCategory, new Callback() {
+                    @Override
+                    public void onSuccess() {
+                        // Quá trình tải ảnh thành công, ẩn ProgressBar và hiển thị ImageView
+                        holder.progressBar.setVisibility(View.GONE);
+                        holder.imgCategory.setVisibility(View.VISIBLE);
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+                        // Xử lý khi có lỗi xảy ra trong quá trình tải ảnh
+                        holder.progressBar.setVisibility(View.GONE);
+                        throw new RuntimeException(e);
+                    }
+                });
+
+
+//        holder.imgCategory.setImageResource(categoryItem.getImage());
         holder.tvNameCategory.setText(categoryItem.getName());
 
         // Xu ly su kien click, duoc su dung o activity cha
@@ -79,15 +99,17 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
         return 0;
     }
 
-    public class CategoryViewHolder extends  RecyclerView.ViewHolder {
+    public class CategoryViewHolder extends RecyclerView.ViewHolder {
          private ImageView imgCategory;
          private TextView tvNameCategory;
+         private ProgressBar progressBar;
 
          public CategoryViewHolder(@NonNull View itemView) {
              super(itemView);
 
              imgCategory = itemView.findViewById(R.id.img_category);
              tvNameCategory = itemView.findViewById(R.id.title_category);
+             progressBar = itemView.findViewById(R.id.progressBar);
          }
      }
 }

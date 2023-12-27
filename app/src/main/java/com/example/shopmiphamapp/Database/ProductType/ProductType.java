@@ -8,12 +8,12 @@ public class ProductType {
     @PrimaryKey(autoGenerate = true)
     private int productTypeId;
     private String name;
-    private int productTypeImg;
+    private String productTypeImgURL;
     private String description;
 
-    public ProductType(String name, int productTypeImg, String description) {
+    public ProductType(String name, String productTypeImgURL,  String description) {
         this.name = name;
-        this.productTypeImg = productTypeImg;
+        this.productTypeImgURL = productTypeImgURL;
         this.description = description;
     }
 
@@ -26,13 +26,21 @@ public class ProductType {
         this.productTypeId = productTypeId;
     }
 
-    public int getProductTypeImg() {
-        return productTypeImg;
+    public String getProductTypeImgURL() {
+        return productTypeImgURL;
     }
 
-    public void setProductTypeImg(int productTypeImg) {
-        this.productTypeImg = productTypeImg;
+    public void setProductTypeImgURL(String productTypeImgURL) {
+        this.productTypeImgURL = productTypeImgURL;
     }
+
+//    public int getProductTypeImg() {
+//        return productTypeImg;
+//    }
+//
+//    public void setProductTypeImg(int productTypeImg) {
+//        this.productTypeImg = productTypeImg;
+//    }
 
     public String getName() {
         return name;

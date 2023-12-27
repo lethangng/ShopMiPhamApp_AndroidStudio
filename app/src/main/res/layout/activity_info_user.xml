@@ -26,19 +26,29 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="250dp"
         android:background="@drawable/bg_info_user">
 
         <com.makeramen.roundedimageview.RoundedImageView
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:id="@+id/imageUser"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_marginTop="30dp"
             android:layout_centerHorizontal="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="58dp"
             android:foregroundGravity="center_horizontal"
             android:scaleType="centerCrop"
             android:src="@drawable/loginimg"
-            app:riv_corner_radius="50dp" />
+            app:riv_corner_radius="200dp" />
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignTop="@+id/imageUser"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="60dp"
+            android:layout_marginBottom="20dp" />
+
     </RelativeLayout>
 
     <LinearLayout
@@ -56,24 +66,41 @@
             android:drawablePadding="8dp"
             android:padding="8dp"
             android:layout_marginTop="15px"
-            android:text="admin"
+            android:text="admin@gmail.com"
             android:textColor="@color/lavender"
             android:background="@drawable/bg_border"
             android:textSize="20sp" />
 
-        <TextView
+        <RelativeLayout
             android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:id="@+id/name"
-            android:textColor="@color/lavender"
-            android:layout_marginTop="20dp"
-            android:padding="8dp"
-            android:textSize="20sp"
-            android:text="Lê Ngọc Thắng"
-            android:drawableLeft="@drawable/ic_user"
-            android:drawablePadding="8dp"
-            android:background="@drawable/bg_border"/>
+            android:layout_marginTop="20dp">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/name"
+                android:textColor="@color/lavender"
+                android:padding="8dp"
+                android:textSize="20sp"
+                android:text="Lê Ngọc Thắng"
+                android:drawableLeft="@drawable/ic_user"
+                android:drawablePadding="8dp"
+                android:background="@drawable/bg_border"/>
+
+            <ImageButton
+                android:id="@+id/btn_update_info"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="15dp"
+                android:background="#fff"
+                android:src="@drawable/ic_reset_2" />
+
+        </RelativeLayout>
+
+
         <TextView
             android:layout_width="300dp"
             android:layout_height="wrap_content"
@@ -115,6 +142,34 @@
             android:drawableLeft="@drawable/ic_gender"
             android:drawablePadding="8dp"
             android:background="@drawable/bg_border"/>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_gravity="center"
+            android:clickable="true"
+            android:foreground="?android:attr/selectableItemBackground">
+            <TextView
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/btnResetPassword"
+                android:textColor="#fff"
+                android:padding="8dp"
+                android:text="Đổi mật khẩu"
+                android:gravity="center"
+                android:textSize="20sp"
+                android:background="@color/lavender"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="55dp"
+                android:src="@drawable/ic_reset" />
+        </RelativeLayout>
     </LinearLayout>
 
 

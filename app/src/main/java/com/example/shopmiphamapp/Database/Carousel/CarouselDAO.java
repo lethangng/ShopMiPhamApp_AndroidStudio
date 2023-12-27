@@ -13,4 +13,8 @@ public interface CarouselDAO {
 
     @Query("SELECT * FROM carousel")
     List<Carousel> getListCarousel();
+    @Query("DELETE FROM carousel")
+    void deleteAllCarousels();
+    @Query("DELETE FROM sqlite_sequence WHERE name='carousel'")
+    void resetCarouselId();
 }

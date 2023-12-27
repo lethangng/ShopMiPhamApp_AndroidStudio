@@ -76,6 +76,7 @@ public class FavoriteProductActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 onBackPressed();
+                HomeActivity.navigationView.setCheckedItem(R.id.nav_home);
             }
         });
     }
@@ -119,7 +120,7 @@ public class FavoriteProductActivity extends AppCompatActivity {
                 int productId = favoriteProduct.getFavoriteProductId();
                 Product product = shopDatabase.productDAO().getProductById(productId);
                 String productType = shopDatabase.productDAO().getProductType(product.getProductId());
-                listProduct.add(new ProductItem(product.getProductId(), product.getImgProduct(), product.getName(), productType, product.getPrice(), product.getSold()));
+                listProduct.add(new ProductItem(product.getProductId(), product.getImgProductURL(), product.getName(), productType, product.getPrice(), product.getSold()));
             }
         }
         return listProduct;

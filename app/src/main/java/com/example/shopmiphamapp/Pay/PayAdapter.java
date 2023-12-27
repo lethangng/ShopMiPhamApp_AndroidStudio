@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -12,6 +13,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.shopmiphamapp.Helper.Helper;
 import com.example.shopmiphamapp.R;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -35,7 +38,26 @@ public class PayAdapter extends RecyclerView.Adapter<PayAdapter.PayViewHodel> {
         if (payItem == null) {
             return;
         }
-        holder.img_product.setImageResource(payItem.getImgId());
+        Picasso.get()
+                .load(payItem.getImgURL())
+                .placeholder(R.drawable.layout_none) // Ảnh placeholder hiển thị trong quá trình tải
+                .error(R.drawable.layout_none) // Ảnh hiển thị khi có lỗi xảy ra
+                .into(holder.img_product, new Callback() {
+                    @Override
+                    public void onSuccess() {
+                        // Quá trình tải ảnh thành công, ẩn ProgressBar và hiển thị ImageView
+                        holder.progressBar.setVisibility(View.GONE);
+                        holder.img_product.setVisibility(View.VISIBLE);
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+                        // Xử lý khi có lỗi xảy ra trong quá trình tải ảnh
+                        holder.progressBar.setVisibility(View.GONE);
+                        throw new RuntimeException(e);
+                    }
+                });
+//        holder.img_product.setImageResource(payItem.getImgId());
         holder.tv_product_name.setText(payItem.getProductName());
         holder.tv_type_product.setText(payItem.getProductType());
         String price = Helper.formatPrice(payItem.getPrice());
@@ -55,6 +77,7 @@ public class PayAdapter extends RecyclerView.Adapter<PayAdapter.PayViewHodel> {
     public class PayViewHodel extends RecyclerView.ViewHolder {
         private ImageView img_product;
         private TextView tv_product_name, tv_type_product, tv_price, tv_pay_count;
+        private ProgressBar progressBar;
 
         public PayViewHodel(@NonNull View itemView) {
             super(itemView);
@@ -63,6 +86,7 @@ public class PayAdapter extends RecyclerView.Adapter<PayAdapter.PayViewHodel> {
             tv_type_product = itemView.findViewById(R.id.tv_type_product);
             tv_price = itemView.findViewById(R.id.tv_price);
             tv_pay_count = itemView.findViewById(R.id.tv_pay_count);
+            progressBar = itemView.findViewById(R.id.progressBar);
         }
     }
 }

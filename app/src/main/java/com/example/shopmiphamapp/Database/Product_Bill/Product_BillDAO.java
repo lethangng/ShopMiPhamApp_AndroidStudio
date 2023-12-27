@@ -12,4 +12,8 @@ public interface Product_BillDAO {
 
     @Query("SELECT * FROM product_bill WHERE billId= :billId")
     List<Product_Bill> getListProductBill(int billId);
+    @Query("DELETE FROM product_bill")
+    void deleteAllProductBills();
+    @Query("DELETE FROM sqlite_sequence WHERE name='product_bill'")
+    void resetProductBillId();
 }

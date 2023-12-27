@@ -2,13 +2,13 @@ package com.example.shopmiphamapp.Cart;
 
 public class CartItem {
     private int cartId, productId;
-    private int imgId, price, count;
-    private String productName, productType;
+    private int price, count;
+    private String productName, productType, imgURL;
 
-    public CartItem(int cartId,int productId, int imgId, String productName, String productType, int price) {
+    public CartItem(int cartId,int productId, String imgURL, String productName, String productType, int price) {
         this.cartId = cartId;
         this.productId = productId;
-        this.imgId = imgId;
+        this.imgURL = imgURL;
         this.price = price;
         this.productName = productName;
         this.productType = productType;
@@ -31,12 +31,12 @@ public class CartItem {
         this.productId = productId;
     }
 
-    public int getImgId() {
-        return imgId;
+    public String getImgURL() {
+        return imgURL;
     }
 
-    public void setImgId(int imgId) {
-        this.imgId = imgId;
+    public void setImgURL(String imgURL) {
+        this.imgURL = imgURL;
     }
 
     public int getPrice() {

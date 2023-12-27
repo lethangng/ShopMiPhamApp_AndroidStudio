@@ -7,11 +7,11 @@ import androidx.annotation.NonNull;
 
 public class ProductItem {
     private int productId;
-    private int image;
+    private String image;
     private String name, productType;
     private int price, sold;
 
-    public ProductItem(int productId, int image, String name, String productType, int price, int sold) {
+    public ProductItem(int productId, String image, String name, String productType, int price, int sold) {
         this.productId = productId;
         this.image = image;
         this.name = name;
@@ -36,11 +36,11 @@ public class ProductItem {
         this.productType = productType;
     }
 
-    public int getImage() {
+    public String getImage() {
         return image;
     }
 
-    public void setImage(int image) {
+    public void setImage(String image) {
         this.image = image;
     }
 
@@ -67,6 +67,4 @@ public class ProductItem {
     public void setSold(int sold) {
         this.sold = sold;
     }
-
-
 }

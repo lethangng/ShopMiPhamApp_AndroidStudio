@@ -93,6 +93,26 @@
                     android:layout_marginLeft="57dp"
                     android:indeterminate="true" />
             </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginBottom="30dp"
+                android:layout_gravity="center">
+                <TextView
+                    android:id="@+id/tv_forgetPassword"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Quên mật khẩu?"
+                    android:textSize="14sp" />
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/gray"/>
+            </LinearLayout>
+            
+
             <TextView
                 android:id="@+id/tv_regiter"
                 android:layout_width="wrap_content"
@@ -100,6 +120,9 @@
                 android:text="Bạn chưa có tài khoản?"
                 android:textSize="14sp"
                 android:layout_gravity="right"/>
+
+
+
         </LinearLayout>
     </ScrollView>
 

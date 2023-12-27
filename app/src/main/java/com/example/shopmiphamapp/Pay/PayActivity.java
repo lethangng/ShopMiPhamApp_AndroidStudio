@@ -8,10 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -69,12 +66,6 @@ public class PayActivity extends AppCompatActivity {
         recyclerViewCart();
         setUi();
         initListener();
-
-//        Calendar calendar = Calendar.getInstance();
-//        Date currentDate = calendar.getTime();
-//        long dateNow = currentDate.getTime();
-//        Log.d("dateNow", String.valueOf(currentDate));
-
     }
 
     private void initUi() {
@@ -120,16 +111,9 @@ public class PayActivity extends AppCompatActivity {
 
                 Toast.makeText(PayActivity.this, "Mua hàng thành công!", Toast.LENGTH_LONG).show();
 
-                // Chờ 1 giây trước khi chuyển hướng
-                Handler handler = new Handler(Looper.getMainLooper());
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        Intent intent = new Intent(PayActivity.this, HomeActivity.class);
-                        startActivity(intent);
-                        finishAffinity();
-                    }
-                }, 1000);
+                Intent intent = new Intent(PayActivity.this, HomeActivity.class);
+                startActivity(intent);
+                finishAffinity();
             }
         });
     }
@@ -144,6 +128,7 @@ public class PayActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 onBackPressed();
+                HomeActivity.navigationView.setCheckedItem(R.id.nav_home);
             }
         });
     }
@@ -160,7 +145,7 @@ public class PayActivity extends AppCompatActivity {
     private List<PayItem> getListPay() {
         List<PayItem> list = new ArrayList<>();
         for (CartItem cartItem : cartItemSelects) {
-            PayItem payItem = new PayItem(cartItem.getImgId(), cartItem.getProductName(),
+            PayItem payItem = new PayItem(cartItem.getImgURL(), cartItem.getProductName(),
                     cartItem.getProductType(), cartItem.getPrice(), cartItem.getCount());
             list.add(payItem);
         }

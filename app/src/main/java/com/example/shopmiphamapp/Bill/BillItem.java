@@ -2,13 +2,13 @@ package com.example.shopmiphamapp.Bill;
 
 public class BillItem {
     private int billId;
-    private int productId, imgId, price, count, totalPrice, sumProduct;
-    private String productName, productType;
+    private int productId, price, count, totalPrice, sumProduct;
+    private String productName, productType, imgURL;
 
-    public BillItem(int billId, int productId, int imgId, int price, int count, int totalPrice, String productName, String productType, int sumProduct) {
+    public BillItem(int billId, int productId, String imgURL, int price, int count, int totalPrice, String productName, String productType, int sumProduct) {
         this.billId = billId;
         this.productId = productId;
-        this.imgId = imgId;
+        this.imgURL = imgURL;
         this.price = price;
         this.count = count;
         this.totalPrice = totalPrice;
@@ -41,12 +41,21 @@ public class BillItem {
         this.productId = productId;
     }
 
-    public int getImgId() {
-        return imgId;
+//    public int getImgId() {
+//        return imgId;
+//    }
+//
+//    public void setImgId(int imgId) {
+//        this.imgId = imgId;
+//    }
+
+
+    public String getImgURL() {
+        return imgURL;
     }
 
-    public void setImgId(int imgId) {
-        this.imgId = imgId;
+    public void setImgURL(String imgURL) {
+        this.imgURL = imgURL;
     }
 
     public int getPrice() {

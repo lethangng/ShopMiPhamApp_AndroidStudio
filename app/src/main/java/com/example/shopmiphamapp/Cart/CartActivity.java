@@ -1,5 +1,6 @@
 package com.example.shopmiphamapp.Cart;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -7,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -17,9 +19,15 @@ import com.example.shopmiphamapp.Database.Cart.Cart;
 import com.example.shopmiphamapp.Database.Product.Product;
 import com.example.shopmiphamapp.Database.ShopDatabase;
 import com.example.shopmiphamapp.Database.User.User;
+import com.example.shopmiphamapp.Helper.Helper;
 import com.example.shopmiphamapp.Home.HomeActivity;
 import com.example.shopmiphamapp.Pay.PayActivity;
 import com.example.shopmiphamapp.R;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.ListResult;
+import com.google.firebase.storage.StorageReference;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -39,6 +47,8 @@ public class CartActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private ShopDatabase shopDatabase;
     private User user;
+
+    private HomeActivity homeActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,9 +70,20 @@ public class CartActivity extends AppCompatActivity {
     public void updateTotalPrice() {
         String tatalPrice = String.valueOf(cartAdapter.getTotalPrice());
         tv_price_total.setText(tatalPrice + "đ");
+
         String countBuy = String.valueOf(selectedItems.size());
         tv_buy.setText("Mua hàng(" + countBuy + ")");
-        count_cart.setText("(" + String.valueOf(cartAdapter.getCountListCart()) + ")");
+
+        String count = String.valueOf(cartAdapter.getCountListCart());
+        count_cart.setText("(" + count + ")");
+
+//        homeActivity = (HomeActivity) getIntent().getSerializableExtra("home_activity");
+//        if (homeActivity != null) {
+//            TextView count_cart = homeActivity.count_cart;
+//            count_cart.setText(count);
+//        }
+
+        HomeActivity.count_cart.setText(count);
     }
 
     private void initUi() {
@@ -111,6 +132,7 @@ public class CartActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 onBackPressed();
+                HomeActivity.navigationView.setCheckedItem(R.id.nav_home);
             }
         });
     }
@@ -127,18 +149,15 @@ public class CartActivity extends AppCompatActivity {
 
     private List<CartItem> getListCart() {
         List<CartItem> list = new ArrayList<>();
-        List<Cart> carts = shopDatabase.cartDAO().getListCartUser(1);
+
+        List<Cart> carts = shopDatabase.cartDAO().getListCartUser(user.getUserId());
         for (int i = 0; i < carts.size(); i++) {
             Product product = shopDatabase.cartDAO().getListProductCartById(carts.get(i).getProductId());
 //            Log.d(">>> check", product.getName());
             String productType = shopDatabase.productDAO().getProductType(product.getProductId());
-            list.add(new CartItem(carts.get(i).getCartId(), product.getProductId(), product.getImgProduct(),
+            list.add(new CartItem(carts.get(i).getCartId(), product.getProductId(), product.getImgProductURL(),
                     product.getName(), productType, product.getPrice()));
         }
-//        list.add(new CartItem(1, R.drawable.loginimg, "San pham 1", "Nuoc hoa", 20000));
-//        list.add(new CartItem(2, R.drawable.mainbkg, "San pham 2", "Nuoc hoa 1", 20000));
-//        list.add(new CartItem(4, R.drawable.loginimg, "San pham 3", "Nuoc hoa 2", 16000));
-//        list.add(new CartItem(5, R.drawable.signimg, "San pham 4", "Nuoc hoa 3", 20000));
 
         return list;
     }

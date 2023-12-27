@@ -12,12 +12,15 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -27,12 +30,10 @@ import com.example.shopmiphamapp.Bill.BillActivity;
 import com.example.shopmiphamapp.Carousel.CarouselAdapter;
 import com.example.shopmiphamapp.Carousel.CarouselItem;
 import com.example.shopmiphamapp.Cart.CartActivity;
-import com.example.shopmiphamapp.Cart.CartViewModel;
 import com.example.shopmiphamapp.Category.CategoryAdapter;
 import com.example.shopmiphamapp.Category.CategoryItem;
 import com.example.shopmiphamapp.Category.CategoryProductActivity;
 import com.example.shopmiphamapp.Database.Carousel.Carousel;
-import com.example.shopmiphamapp.Database.Cart.Cart;
 import com.example.shopmiphamapp.Database.Product.Product;
 import com.example.shopmiphamapp.Database.ProductType.ProductType;
 import com.example.shopmiphamapp.Database.ShopDatabase;
@@ -42,12 +43,16 @@ import com.example.shopmiphamapp.Login.LoginActivity;
 import com.example.shopmiphamapp.Product.DetailProductActivity;
 import com.example.shopmiphamapp.Product.ProductItem;
 import com.example.shopmiphamapp.Product.ProductAdapter;
+import com.example.shopmiphamapp.Product.SearchProductActivity;
 import com.example.shopmiphamapp.R;
 import com.example.shopmiphamapp.User.InfoUserActivity;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.gson.Gson;
+import com.makeramen.roundedimageview.RoundedImageView;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,23 +62,11 @@ import me.relex.circleindicator.CircleIndicator3;
 public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private ShopDatabase shopDatabase;
     private DrawerLayout drawerLayout;
-    private NavigationView navigationView;
+    public static NavigationView navigationView;
     private Toolbar toolbar;
     private ViewPager2 mViewPager2;
     private CircleIndicator3 mCircleIndicator3;
     private List<CarouselItem> mListCarousel;
-    // Auto slider
-    private Handler mHandler = new Handler();
-    private Runnable mRunnable = new Runnable() {
-        @Override
-        public void run() {
-            if (mViewPager2.getCurrentItem() == mListCarousel.size() - 1) {
-                mViewPager2.setCurrentItem(0);
-            } else {
-                mViewPager2.setCurrentItem(mViewPager2.getCurrentItem() + 1);
-            }
-        }
-    };
 
 //    RecyclerView product
     private RecyclerView rcvProduct, rcvCategory;
@@ -82,48 +75,62 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 //  RecyclerView Category
     private CategoryAdapter categoryAdapter;
 
-    private ImageButton btn_cart, btn_chat;
-    private TextView count_cart;
+    private ImageButton btn_cart, btn_chat, btnSearch;
+    private EditText edtSearch;
+    public static TextView count_cart;
 
-    private String userJson;
+    // Auto slider
+    private Handler mHandler;
+    private Runnable mRunnable;
+
+    private ProgressBar progressBar;
+
     public static User userPublic;
 
-    private CartViewModel cartViewModel;
+    private FirebaseUser userFirebase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        FirebaseUser userFirebase = FirebaseAuth.getInstance().getCurrentUser();
+        userFirebase = FirebaseAuth.getInstance().getCurrentUser();
         if (userFirebase == null) {
             return;
         }
         String userEmail = userFirebase.getEmail();
         shopDatabase = ShopDatabase.getInstance(this);
-        User user = shopDatabase.userDAO().getUser(userEmail);
 
-        userPublic = user;
-
-        userJson = new Gson().toJson(user);
+        FrameLayout progressLayout = findViewById(R.id.progress_layout);
 
         initUi();
 
-        // Update lại count cart
-        updateCountCart(user);
+//        // Hiển thị màn hình xám với ProgressBar
+        progressLayout.setVisibility(View.VISIBLE);
 
-        navigate(user);
+        shopDatabase.isDatabaseInitialized().observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean isInitialized) {
+                if (isInitialized) {
+                    // Ẩn màn hình xám
+                    progressLayout.setVisibility(View.GONE);
+                    progressBar.setVisibility(View.GONE);
 
-        category();
+                    userPublic = shopDatabase.userDAO().getUser(userEmail);
 
-        recyclerViewProduct(userJson);
+                    setUi();
 
-        carousel();
+                    navigateLeft();
 
-        // Xử lý khi số lượng cart thay đổi thì update lại count cart bên ngoài HomeActivity
-        handleUpdateCart(user);
+                    category();
+                    recyclerViewProduct();
+                    carousel();
 
-        initListener();
+                    initListener();
+                }
+            }
+        });
+
     }
 
     private void initUi() {
@@ -137,13 +144,40 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         rcvCategory = findViewById(R.id.rcv_categpry);
         rcvProduct = findViewById(R.id.rcv_product);
         count_cart = findViewById(R.id.count_cart);
+        progressBar = findViewById(R.id.progressBar);
+        btnSearch = findViewById(R.id.btnSearch);
+        edtSearch = findViewById(R.id.edtSearch);
+    }
+
+    private void setUi() {
+        int userId = userPublic.getUserId();
+        // Check xem có tìm thấy không
+        if (userId > 0) {
+            String countCart = String.valueOf(shopDatabase.cartDAO().getListCartUser(userId).size());
+            count_cart.setText(countCart);
+        }
     }
 
     private void initListener() {
+        btnSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String searchValue = edtSearch.getText().toString().trim();
+                if (searchValue.isEmpty()) {
+                    Toast.makeText(HomeActivity.this, "Vui lòng nhập từ khóa.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                Intent intent = new Intent(HomeActivity.this, SearchProductActivity.class);
+                intent.putExtra("productKey", searchValue);
+                startActivity(intent);
+            }
+        });
         // Cart Btn
         btn_cart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 Intent intent = new Intent(HomeActivity.this, CartActivity.class);
                 startActivity(intent);
             }
@@ -156,11 +190,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 startActivity(intent);
             }
         });
-    }
-
-    private void updateCountCart(User user) {
-        String countCart = String.valueOf(shopDatabase.cartDAO().getListCartUser(user.getUserId()).size());
-        count_cart.setText(countCart);
     }
 
     // Navigation
@@ -201,10 +230,11 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         drawerLayout.closeDrawer(GravityCompat.START);
         return true;
     }
-    private void navigate(User user) {
+    private void navigateLeft() {
         setSupportActionBar(toolbar);
         navigationView.bringToFront();
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar,
+                R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawerLayout.addDrawerListener(toggle);
 
         toggle.syncState();
@@ -214,15 +244,61 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
         // Xet title cho header của navigation
         View headerView = navigationView.getHeaderView(0);
-        TextView headerTextView = headerView.findViewById(R.id.tv_name);
-        headerTextView.setText("Xin chào, " + user.getName());
+        TextView tv_name = headerView.findViewById(R.id.tv_name);
+        TextView tv_email = headerView.findViewById(R.id.tv_email);
+        RoundedImageView imageUser = headerView.findViewById(R.id.imageUser);
+        ProgressBar progressBarHeader = headerView.findViewById(R.id.progressBarHeader);
+
+
+        tv_name.setText(userPublic.getName());
+        tv_email.setText(userFirebase.getEmail());
+
+        if (userFirebase.getPhotoUrl() == null) {
+            progressBarHeader.setVisibility(View.GONE);
+            imageUser.setImageResource(R.drawable.img_avatar);
+        } else {
+//            Log.d("uriOK", String.valueOf(userFirebase.getPhotoUrl()));
+            Picasso.get()
+                    .load(userFirebase.getPhotoUrl())
+                    .placeholder(R.drawable.img_avatar) // Ảnh placeholder hiển thị trong quá trình tải
+                    .error(R.drawable.img_avatar) // Ảnh hiển thị khi có lỗi xảy ra
+                    .into(imageUser, new Callback() {
+                        @Override
+                        public void onSuccess() {
+                            // Quá trình tải ảnh thành công, ẩn ProgressBar và hiển thị ImageView
+                            progressBarHeader.setVisibility(View.GONE);
+                            imageUser.setVisibility(View.VISIBLE);
+                        }
+
+                        @Override
+                        public void onError(Exception e) {
+                            // Xử lý khi có lỗi xảy ra trong quá trình tải ảnh
+                            progressBarHeader.setVisibility(View.GONE);
+                            throw new RuntimeException(e);
+                        }
+                    });
+        }
     }
 
     private void carousel() {
+        // Auto slider
+        mHandler = new Handler();
+        mRunnable = new Runnable() {
+            @Override
+            public void run() {
+                if (mViewPager2.getCurrentItem() == mListCarousel.size() - 1) {
+                    mViewPager2.setCurrentItem(0);
+                } else {
+                    mViewPager2.setCurrentItem(mViewPager2.getCurrentItem() + 1);
+                }
+            }
+        };
+
         mListCarousel = getListCarousel();
         CarouselAdapter adapter = new CarouselAdapter(mListCarousel);
         mViewPager2.setAdapter(adapter);
         mCircleIndicator3.setViewPager(mViewPager2);
+
 //        Lang nghe su kien chuyen page
         mViewPager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
@@ -234,12 +310,11 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         });
     }
 
-    private void recyclerViewProduct(String userJson) {
+    private void recyclerViewProduct() {
         productAdapter = new ProductAdapter(this);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
         rcvProduct.setLayoutManager(gridLayoutManager);
         productAdapter.setData(getListProduct());
-
         rcvProduct.setAdapter(productAdapter);
 
         // Đặt ClickListener cho mục trong Adapter
@@ -248,16 +323,17 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             public void onItemClick(ProductItem item) {
                 Intent intent = new Intent(HomeActivity.this, DetailProductActivity.class);
                 String productIdJson = new Gson().toJson(item.getProductId());
+
                 // Gửi dữ liệu của mục bằng cách đính kèm nó như một Extra
                 intent.putExtra("productId", productIdJson);
-                intent.putExtra("user", userJson);
                 startActivity(intent);
             }
         });
     }
 
     private void category() {
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this,
+                LinearLayoutManager.HORIZONTAL, false);
         rcvCategory.setLayoutManager(linearLayoutManager);
         categoryAdapter = new CategoryAdapter(this);
         categoryAdapter.setData(getCategory());
@@ -270,7 +346,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 Intent intent = new Intent(HomeActivity.this, CategoryProductActivity.class);
                 String productTypeIdJson = new Gson().toJson(item.getProductTypeId());
                 // Gửi dữ liệu của mục bằng cách đính kèm nó như một Extra
-                intent.putExtra("user", userJson);
                 intent.putExtra("productTypeId", productTypeIdJson);
                 startActivity(intent);
             }
@@ -278,16 +353,10 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     }
     private List<CarouselItem> getListCarousel() {
         List<CarouselItem> list = new ArrayList<>();
-
         List<Carousel> carousels = shopDatabase.carouselDAO().getListCarousel();
         for(Carousel carousel : carousels) {
             list.add(new CarouselItem(carousel.getCarouselImg()));
         }
-//        list.add(new CarouselItem(R.drawable.loginimg));
-//        list.add(new CarouselItem(R.drawable.signimg));
-//        list.add(new CarouselItem(R.drawable.mainbkg));
-//        list.add(new CarouselItem(R.drawable.product_1));
-
         return list;
     }
 
@@ -296,32 +365,21 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         List<Product> products = ShopDatabase.getInstance(this).productDAO().getListProduct();
         for(Product product: products) {
             String productType = shopDatabase.productDAO().getProductType(product.getProductId());
-            listProduct.add(new ProductItem(product.getProductId(), product.getImgProduct(),
+            listProduct.add(new ProductItem(product.getProductId(), product.getImgProductURL(),
                     product.getName(), productType, product.getPrice(), product.getSold()));
         }
+
         return listProduct;
     }
     private List<CategoryItem> getCategory() {
         List<CategoryItem> listCategory = new ArrayList<>();
+
         List<ProductType> productTypeList = shopDatabase.productTypeDAO().getListProductType();
         for (ProductType productType : productTypeList) {
-            listCategory.add(new CategoryItem(productType.getProductTypeId(), productType.getProductTypeImg(), productType.getName()));
+            listCategory.add(new CategoryItem(productType.getProductTypeId(),
+                    productType.getProductTypeImgURL(), productType.getName()));
         }
-//        listCategory.add(new CategoryItem(R.drawable.signimg, "Category 1"));
-//        listCategory.add(new CategoryItem(R.drawable.loginimg, "Category 2"));
-//        listCategory.add(new CategoryItem(R.drawable.mainbkg, "Category 3"));
 
         return listCategory;
-    }
-
-    private void handleUpdateCart(User user) {
-        cartViewModel = new ViewModelProvider(this).get(CartViewModel.class);
-        cartViewModel.init(shopDatabase.cartDAO());
-        cartViewModel.getListCartLiveData().observe(this, new Observer<List<Cart>>() {
-            @Override
-            public void onChanged(List<Cart> carts) {
-                updateCountCart(user);
-            }
-        });
     }
 }

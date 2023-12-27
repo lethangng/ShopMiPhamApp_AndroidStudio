@@ -15,5 +15,9 @@ public interface ProductTypeDAO {
 
     @Query("SELECT * FROM product_type where productTypeId= :productTypeId Limit 1")
     ProductType getProductTypeById(int productTypeId);
+    @Query("DELETE FROM product_type")
+    void deleteAllProductTypes();
 
+    @Query("DELETE FROM sqlite_sequence WHERE name='product_type'")
+    void resetProductTypeId();
 }

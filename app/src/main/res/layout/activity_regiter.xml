@@ -6,9 +6,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".Login.RegiterActivity">
-
-
-
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -57,7 +54,7 @@
                     android:background="@drawable/edit_text_bg"/>
 
                 <ImageButton
-                    android:id="@+id/ibtn_eye"
+                    android:id="@+id/btn_eye_password"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:backgroundTint="@color/white"
@@ -86,7 +83,7 @@
                     android:background="@drawable/edit_text_bg"/>
 
                 <ImageButton
-                    android:id="@+id/ibtn_eye_2"
+                    android:id="@+id/btn_eye_confirmPassword"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:backgroundTint="@color/white"
@@ -96,20 +93,6 @@
                     android:layout_marginRight="10dp"
                     android:src="@drawable/ic_eye2" />
             </RelativeLayout>
-<!--            <EditText-->
-<!--                android:layout_width="300dp"-->
-<!--                android:layout_height="60dp"-->
-<!--                android:layout_gravity="center"-->
-<!--                android:id="@+id/password"-->
-<!--                android:textColor="@color/lavender"-->
-<!--                android:layout_marginTop="20dp"-->
-<!--                android:padding="8dp"-->
-<!--                android:hint="Mật khẩu"-->
-<!--                android:inputType="textPassword"-->
-<!--                android:textColorHint="@color/gray"-->
-<!--                android:drawableLeft="@drawable/baseline_lock_24"-->
-<!--                android:drawablePadding="8dp"-->
-<!--                android:background="@drawable/edit_text_bg"/>-->
 
 
             <EditText
@@ -150,7 +133,7 @@
                 android:layout_marginTop="20dp"
                 android:padding="8dp"
                 android:hint="Địa chỉ"
-                android:inputType="phone"
+                android:inputType="text"
                 android:textColorHint="@color/gray"
                 android:drawableLeft="@drawable/ic_address"
                 android:drawablePadding="8dp"
@@ -192,7 +175,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="10dp"
-                android:layout_marginBottom="30dp">
+                android:layout_marginBottom="20dp">
 
                 <Button
                     android:id="@+id/btnRegiter"
@@ -213,6 +196,14 @@
                     android:layout_marginLeft="57dp"
                     android:indeterminate="true" />
             </RelativeLayout>
+            <TextView
+                android:id="@+id/tv_login"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Đăng nhập"
+                android:textSize="14sp"
+                android:layout_marginBottom="30dp"
+                android:layout_gravity="right"/>
         </LinearLayout>
     </ScrollView>
 

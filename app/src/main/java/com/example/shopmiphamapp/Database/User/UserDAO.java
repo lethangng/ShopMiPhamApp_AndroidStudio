@@ -19,4 +19,10 @@ public interface UserDAO {
 
     @Query("SELECT * FROM user where username = :username")
     User getUser(String username);
+
+    @Query("DELETE FROM user")
+    void deleteAllUsers();
+
+    @Query("DELETE FROM sqlite_sequence WHERE name='user'")
+    void resetUserId();
 }

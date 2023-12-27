@@ -18,10 +18,10 @@
         android:textColor="@color/lavender"
         android:layout_marginLeft="10dp"
         android:text="Danh mục sản phẩm" />
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rcv_categpry"
-        android:layout_marginTop="10dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-    </androidx.recyclerview.widget.RecyclerView>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rcv_categpry"
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        </androidx.recyclerview.widget.RecyclerView>
 </LinearLayout>

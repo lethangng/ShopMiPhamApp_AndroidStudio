@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -16,6 +17,8 @@ import com.example.shopmiphamapp.Helper.Helper;
 import com.example.shopmiphamapp.Product.ProductAdapter;
 import com.example.shopmiphamapp.Product.ProductItem;
 import com.example.shopmiphamapp.R;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -52,7 +55,28 @@ public class BillAdapter extends RecyclerView.Adapter<BillAdapter.BillViewHodel>
         if (billItem == null) {
             return;
         }
-        holder.img_product.setImageResource(billItem.getImgId());
+
+        Picasso.get()
+                .load(billItem.getImgURL())
+                .placeholder(R.drawable.layout_none) // Ảnh placeholder hiển thị trong quá trình tải
+                .error(R.drawable.layout_none) // Ảnh hiển thị khi có lỗi xảy ra
+                .into(holder.img_product, new Callback() {
+                    @Override
+                    public void onSuccess() {
+                        // Quá trình tải ảnh thành công, ẩn ProgressBar và hiển thị ImageView
+                        holder.progressBar.setVisibility(View.GONE);
+                        holder.img_product.setVisibility(View.VISIBLE);
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+                        // Xử lý khi có lỗi xảy ra trong quá trình tải ảnh
+                        holder.progressBar.setVisibility(View.GONE);
+                        throw new RuntimeException(e);
+                    }
+                });
+
+//        holder.img_product.setImageResource(billItem.getImgId());
         holder.tv_product_name.setText(billItem.getProductName());
         holder.tv_type_product.setText(billItem.getProductType());
         String price = Helper.formatPrice(billItem.getPrice());
@@ -85,8 +109,8 @@ public class BillAdapter extends RecyclerView.Adapter<BillAdapter.BillViewHodel>
 
     public class BillViewHodel extends RecyclerView.ViewHolder {
         private ImageView img_product;
-
         private TextView tv_product_name, tv_type_product, tv_price, tv_pay_count, total_price, sum_product;
+        ProgressBar progressBar;
 
         public BillViewHodel(@NonNull View itemView) {
             super(itemView);
@@ -98,7 +122,7 @@ public class BillAdapter extends RecyclerView.Adapter<BillAdapter.BillViewHodel>
             tv_pay_count = itemView.findViewById(R.id.tv_pay_count);
             total_price = itemView.findViewById(R.id.total_price);
             sum_product = itemView.findViewById(R.id.sum_product);
-
+            progressBar = itemView.findViewById(R.id.progressBar);
         }
     }
 }

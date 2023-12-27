@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:paddingLeft="20dp"
+    android:layout_marginTop="30dp"
+    android:background="@color/lavender"
+    android:layout_width="match_parent"
+    android:layout_height="220dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginTop="10dp"
+        android:text="Xin chào,"
+        android:textColor="@color/white"
+        android:textSize="25sp" />
+
+    <TextView
+        android:id="@+id/tv_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/imageUser"
+        android:layout_alignParentLeft="true"
+        android:layout_marginTop="1dp"
+        android:text="Lê Ngọc Thắng"
+        android:textColor="@color/white"
+        android:textSize="30sp" />
+
+    <TextView
+        android:id="@+id/tv_email"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_name"
+        android:layout_alignParentLeft="true"
+        android:layout_marginTop="1dp"
+        android:text="email@gmail.com"
+        android:textColor="@color/white"
+        android:textSize="20sp" />
+
+
+    <com.makeramen.roundedimageview.RoundedImageView
+        android:id="@+id/imageUser"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center"
+        android:layout_marginTop="45dp"
+        android:layout_marginRight="20dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/loginimg"
+        app:riv_corner_radius="100dp" />
+
+    <ProgressBar
+        android:id="@+id/progressBarHeader"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_alignStart="@+id/imageUser"
+        android:layout_alignTop="@+id/imageUser"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="42dp" />
+
+</RelativeLayout>

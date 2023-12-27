@@ -1,17 +1,17 @@
 package com.example.shopmiphamapp.Carousel;
 
 public class CarouselItem {
-    private int resId;
+    private String resId;
 
-    public CarouselItem(int resId) {
+    public CarouselItem(String resId) {
         this.resId = resId;
     }
 
-    public int getResId() {
+    public String getResId() {
         return resId;
     }
 
-    public void setResId(int resId) {
+    public void setResId(String resId) {
         this.resId = resId;
     }
 }

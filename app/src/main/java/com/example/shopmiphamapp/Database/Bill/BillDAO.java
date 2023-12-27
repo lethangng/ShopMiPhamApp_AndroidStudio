@@ -1,6 +1,7 @@
 package com.example.shopmiphamapp.Database.Bill;
 
 import androidx.room.Dao;
+import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
@@ -18,4 +19,10 @@ public interface BillDAO {
 
     @Query("SELECT * FROM bill WHERE id= :billId")
     Bill getBillById(int billId);
+
+    @Query("DELETE FROM bill")
+    void deleteAllBills();
+
+    @Query("DELETE FROM sqlite_sequence WHERE name='bill'")
+    void resetBillId();
 }

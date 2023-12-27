@@ -2,11 +2,11 @@ package com.example.shopmiphamapp.Pay;
 
 public class PayItem {
     private int payItemId;
-    private int imgId, price, count;
-    private String productName, productType;
+    private int price, count;
+    private String productName, productType, imgURL;
 
-    public PayItem(int imgId, String productName, String productType, int price, int count) {
-        this.imgId = imgId;
+    public PayItem(String imgURL, String productName, String productType, int price, int count) {
+        this.imgURL = imgURL;
         this.price = price;
         this.count = count;
         this.productName = productName;
@@ -21,12 +21,12 @@ public class PayItem {
         this.payItemId = payItemId;
     }
 
-    public int getImgId() {
-        return imgId;
+    public String getImgURL() {
+        return imgURL;
     }
 
-    public void setImgId(int imgId) {
-        this.imgId = imgId;
+    public void setImgURL(String imgURL) {
+        this.imgURL = imgURL;
     }
 
     public int getPrice() {

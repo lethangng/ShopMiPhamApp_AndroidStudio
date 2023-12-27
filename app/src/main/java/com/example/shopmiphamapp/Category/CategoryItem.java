@@ -3,12 +3,13 @@ package com.example.shopmiphamapp.Category;
 public class CategoryItem {
 
     private int productTypeId;
-    private int image;
+    private String imageURL;
     private String name;
 
-    public CategoryItem(int productTypeId, int image, String name) {
+    public CategoryItem(int productTypeId, String imageURL, String name) {
         this.productTypeId = productTypeId;
-        this.image = image;
+        this.imageURL = imageURL;
+
         this.name = name;
     }
 
@@ -19,13 +20,22 @@ public class CategoryItem {
     public void setProductTypeId(int productTypeId) {
         this.productTypeId = productTypeId;
     }
-    public int getImage() {
-        return image;
+
+    public String getImageURL() {
+        return imageURL;
     }
 
-    public void setImage(int image) {
-        this.image = image;
+    public void setImageURL(String imageURL) {
+        this.imageURL = imageURL;
     }
+
+//    public int getImage() {
+//        return image;
+//    }
+//
+//    public void setImage(int image) {
+//        this.image = image;
+//    }
 
     public String getName() {
         return name;

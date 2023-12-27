@@ -249,6 +249,8 @@
             android:gravity="center"
             android:textSize="18dp"
             android:textColor="@color/white"
-            android:background="@color/lavender"/>
+            android:background="@color/lavender"
+            android:clickable="true"
+            android:foreground="?android:attr/selectableItemBackground"/>
     </LinearLayout>
 </RelativeLayout>

@@ -11,4 +11,6 @@ public interface ListImageDAO {
 
     @Query("SELECT * FROM list_image where productId=:productId")
     ListImage getListImage(int productId);
+    @Query("DELETE FROM list_image")
+    void deleteAllListImages();
 }

@@ -11,6 +11,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,6 +21,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.shopmiphamapp.Database.ShopDatabase;
 import com.example.shopmiphamapp.Helper.Helper;
 import com.example.shopmiphamapp.R;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,7 +71,26 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHodel>
         if (cartItem == null) {
             return;
         }
-        holder.img_cart.setImageResource(cartItem.getImgId());
+        Picasso.get()
+                .load(cartItem.getImgURL())
+                .placeholder(R.drawable.layout_none) // Ảnh placeholder hiển thị trong quá trình tải
+                .error(R.drawable.layout_none) // Ảnh hiển thị khi có lỗi xảy ra
+                .into(holder.img_cart, new Callback() {
+                    @Override
+                    public void onSuccess() {
+                        // Quá trình tải ảnh thành công, ẩn ProgressBar và hiển thị ImageView
+                        holder.progressBar.setVisibility(View.GONE);
+                        holder.img_cart.setVisibility(View.VISIBLE);
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+                        // Xử lý khi có lỗi xảy ra trong quá trình tải ảnh
+                        holder.progressBar.setVisibility(View.GONE);
+                        throw new RuntimeException(e);
+                    }
+                });
+//        holder.img_cart.setImageResource(cartItem.getImgId());
         holder.tv_product_name.setText(cartItem.getProductName());
         holder.tv_type_product.setText(cartItem.getProductType());
 
@@ -195,6 +217,8 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHodel>
         private CheckBox cb_select;
         private ImageButton btn_minus, btn_add;
 
+        private ProgressBar progressBar;
+
         public CartViewHodel(@NonNull View itemView) {
             super(itemView);
 
@@ -207,6 +231,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHodel>
             btn_minus = itemView.findViewById(R.id.btn_minus);
             btn_add = itemView.findViewById(R.id.btn_add);
             btnDelete = itemView.findViewById(R.id.btn_delete);
+            progressBar = itemView.findViewById(R.id.progressBar);
         }
     }
 

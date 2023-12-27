@@ -32,6 +32,10 @@ public interface CartDAO {
 
     @Query("DELETE FROM cart WHERE cartId = :cartId")
     void deleteCart(int cartId);
+    @Query("DELETE FROM cart")
+    void deleteAllCarts();
+    @Query("DELETE FROM sqlite_sequence WHERE name='cart'")
+    void resetCartId();
 }
 
 

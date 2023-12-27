@@ -107,7 +107,8 @@ public class DetailBillActivity extends AppCompatActivity {
             Product product = shopDatabase.productDAO().getProductById(productBill.getProductId());
             String productType = shopDatabase.productTypeDAO().getProductTypeById(product.getProductId()).getName();
 
-            list.add(new PayItem(product.getImgProduct(), product.getName(), productType, product.getPrice(), productBill.getQuantity()));
+            list.add(new PayItem(product.getImgProductURL(), product.getName(),
+                    productType, product.getPrice(), productBill.getQuantity()));
         }
 
         return list;

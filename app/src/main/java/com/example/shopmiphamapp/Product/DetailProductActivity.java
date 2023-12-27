@@ -71,19 +71,18 @@ public class DetailProductActivity extends AppCompatActivity {
 
         initUi();
         backNavigation();
-        carosel();
+
 
         String productIdJson = getIntent().getStringExtra("productId");
         productId = new Gson().fromJson(productIdJson, Integer.class);
         product = shopDatabase.productDAO().getProductById(productId);
-
         user = HomeActivity.userPublic;
 
-        if (productIdJson != null) {
-            setUi(productId);
-        }
+        setUi();
 
-        updateCount(user);
+        carousel();
+
+        updateCount();
         initListener();
 
     }
@@ -103,8 +102,7 @@ public class DetailProductActivity extends AppCompatActivity {
         product_type = findViewById(R.id.product_type);
     }
 
-    private void setUi(int productId) {
-        Product product = shopDatabase.productDAO().getProductById(productId);
+    private void setUi() {
         product_desc.setText(HtmlCompat.fromHtml(product.getDescription(), HtmlCompat.FROM_HTML_MODE_LEGACY));
         String price = Helper.formatPrice(product.getPrice());
         product_price.setText(price);
@@ -142,7 +140,7 @@ public class DetailProductActivity extends AppCompatActivity {
                             "Sản phẩm đã tồn tại trong giỏ hàng!", Toast.LENGTH_SHORT).show();
                 } else {
                     shopDatabase.cartDAO().insertCart(new Cart(productId, user.getUserId()));
-                    updateCount(user);
+                    updateCount();
                     Toast.makeText(DetailProductActivity.this,
                             "Thêm sản phẩm vào giỏ hàng thành công!", Toast.LENGTH_SHORT).show();
                 }
@@ -175,7 +173,7 @@ public class DetailProductActivity extends AppCompatActivity {
     }
 
     // Update lại số lượng trong cart khi btn_add_cart được nhấn
-    private void updateCount(User user) {
+    private void updateCount() {
         String countCart = String.valueOf(shopDatabase.cartDAO().getListCartUser(user.getUserId()).size());
         count_cart.setText(countCart);
     }
@@ -191,7 +189,7 @@ public class DetailProductActivity extends AppCompatActivity {
         }
     }
 
-    private void carosel() {
+    private void carousel() {
         mListCarousel = getListCarousel();
         CarouselAdapter adapter = new CarouselAdapter(mListCarousel);
         mViewPager2.setAdapter(adapter);
@@ -209,10 +207,12 @@ public class DetailProductActivity extends AppCompatActivity {
 
     private List<CarouselItem> getListCarousel() {
         List<CarouselItem> list = new ArrayList<>();
-        list.add(new CarouselItem(R.drawable.loginimg));
-        list.add(new CarouselItem(R.drawable.signimg));
-        list.add(new CarouselItem(R.drawable.mainbkg));
-        list.add(new CarouselItem(R.drawable.product_1));
+
+        list.add(new CarouselItem(product.getImgProductURL()));
+//        list.add(new CarouselItem(R.drawable.loginimg));
+//        list.add(new CarouselItem(R.drawable.signimg));
+//        list.add(new CarouselItem(R.drawable.mainbkg));
+//        list.add(new CarouselItem(R.drawable.product_1));
 
         return list;
     }

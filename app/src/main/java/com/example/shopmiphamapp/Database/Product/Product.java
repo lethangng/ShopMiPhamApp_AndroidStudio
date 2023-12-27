@@ -9,7 +9,7 @@ public class Product {
     private int productId;
     private String name;
     private String description;
-    private int imgProduct;
+    private String imgProductURL;
     private int imgProductListId;
     private int price;
     private int sold;
@@ -17,10 +17,11 @@ public class Product {
     private int productTypeId;
     private int quantity;
 
-    public Product(String name, String description, int imgProduct, int imgProductListId, int price, int sold, int categoryId, int productTypeId, int quantity) {
+    public Product(String name, String description, String imgProductURL, int imgProductListId, int price, int sold, int categoryId, int productTypeId, int quantity) {
         this.name = name;
         this.description = description;
-        this.imgProduct = imgProduct;
+//        this.imgProduct = imgProduct;
+        this.imgProductURL = imgProductURL;
         this.imgProductListId = imgProductListId;
         this.price = price;
         this.sold = sold;
@@ -53,12 +54,20 @@ public class Product {
         this.description = description;
     }
 
-    public int getImgProduct() {
-        return imgProduct;
+//    public int getImgProduct() {
+//        return imgProduct;
+//    }
+//
+//    public void setImgProduct(int imgProduct) {
+//        this.imgProduct = imgProduct;
+//    }
+
+    public String getImgProductURL() {
+        return imgProductURL;
     }
 
-    public void setImgProduct(int imgProduct) {
-        this.imgProduct = imgProduct;
+    public void setImgProductURL(String imgProductURL) {
+        this.imgProductURL = imgProductURL;
     }
 
     public int getImgProductListId() {

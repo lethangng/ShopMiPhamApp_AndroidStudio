@@ -224,7 +224,9 @@
                     android:layout_marginRight="10dp"
                     android:orientation="horizontal"
                     android:gravity="center_horizontal"
-                    android:background="@drawable/bg_border">
+                    android:background="@drawable/bg_border"
+                    android:clickable="true"
+                    android:foreground="?android:attr/selectableItemBackground">
 
                     <ImageView
                         android:layout_width="wrap_content"
@@ -251,7 +253,9 @@
                     android:orientation="horizontal"
                     android:gravity="center_horizontal"
                     android:layout_marginRight="10dp"
-                    android:background="@drawable/bg_border">
+                    android:background="@drawable/bg_border"
+                    android:clickable="true"
+                    android:foreground="?android:attr/selectableItemBackground">
 
                     <ImageView
                         android:layout_width="wrap_content"

@@ -27,4 +27,10 @@ public interface FavoriteProductDAO {
 
     @Query("DELETE FROM favorite_product WHERE userId= :userId AND productId= :productId")
     void deleteFavoriteProduct(int userId, int productId);
+
+    @Query("DELETE FROM favorite_product")
+    void deleteAllFavoriteProducts();
+
+    @Query("DELETE FROM sqlite_sequence WHERE name='favorite_product'")
+    void resetFavoriteProductId();
 }

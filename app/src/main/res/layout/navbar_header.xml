@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/lavender"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:paddingVertical="10dp"
+    android:paddingHorizontal="10dp">
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="42dp"
+        android:layout_height="42dp"
+        android:layout_marginRight="5dp"
+        app:navigationIcon="@drawable/ic_bars"
+        android:background="@color/lavender"/>
+
+    <RelativeLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1">
+        <EditText
+            android:id="@+id/edtSearch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/edit_text_bg"
+            android:hint="Tìm kiếm..."
+            android:inputType="text"
+            android:paddingHorizontal="20dp"
+            android:paddingVertical="10dp"
+            android:textColor="@color/lavender"
+            android:textColorHint="@color/gray" />
+        <ImageButton
+            android:id="@+id/btnSearch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/baseline_search_24"
+            android:background="#fff"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="15dp"/>
+    </RelativeLayout>
+
+
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <ImageButton
+            android:id="@+id/btn_cart"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:backgroundTint="@color/lavender"
+            android:padding="15dp"
+            android:src="@drawable/baseline_shopping_cart_24"
+            app:tint="@color/white" />
+        <androidx.cardview.widget.CardView
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_alignEnd="@id/btn_cart"
+            android:layout_alignTop="@id/btn_cart"
+            android:layout_marginRight="5dp"
+            app:cardCornerRadius="50dp"
+            android:backgroundTint="@color/red">
+            <TextView
+                android:id="@+id/count_cart"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="10sp"
+                android:layout_gravity="center"
+                android:textColor="@color/white"
+                android:text="3"/>
+        </androidx.cardview.widget.CardView>
+    </RelativeLayout>
+
+    <ImageButton
+        android:id="@+id/btn_chat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/baseline_chat_24"
+        android:backgroundTint="@color/lavender"/>
+
+</LinearLayout>
