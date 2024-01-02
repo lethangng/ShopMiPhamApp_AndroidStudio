@@ -13,15 +13,21 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.appcompat.widget.Toolbar;
 
 import com.example.shopmiphamapp.Database.Cart.Cart;
+import com.example.shopmiphamapp.Database.InitShopDatabase;
 import com.example.shopmiphamapp.Database.Product.Product;
 import com.example.shopmiphamapp.Database.ShopDatabase;
 import com.example.shopmiphamapp.Database.User.User;
 import com.example.shopmiphamapp.Helper.Helper;
 import com.example.shopmiphamapp.Home.HomeActivity;
 import com.example.shopmiphamapp.Pay.PayActivity;
+import com.example.shopmiphamapp.Product.DetailProductActivity;
+import com.example.shopmiphamapp.Product.ProductAdapter;
+import com.example.shopmiphamapp.Product.ProductItem;
 import com.example.shopmiphamapp.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -39,7 +45,7 @@ public class CartActivity extends AppCompatActivity {
     private CartAdapter cartAdapter;
 
     private List<CartItem> selectedItems;
-    private TextView tv_buy, tv_price_total, count_cart;
+    private TextView tv_buy, tv_price_total, count_cart, tvCartNull;
     private CheckBox cb_select_all;
 
     public boolean isCheckAll = false;
@@ -77,12 +83,6 @@ public class CartActivity extends AppCompatActivity {
         String count = String.valueOf(cartAdapter.getCountListCart());
         count_cart.setText("(" + count + ")");
 
-//        homeActivity = (HomeActivity) getIntent().getSerializableExtra("home_activity");
-//        if (homeActivity != null) {
-//            TextView count_cart = homeActivity.count_cart;
-//            count_cart.setText(count);
-//        }
-
         HomeActivity.count_cart.setText(count);
     }
 
@@ -93,11 +93,16 @@ public class CartActivity extends AppCompatActivity {
         cb_select_all = findViewById(R.id.cb_select_all);
         toolbar = findViewById(R.id.back_navigation);
         count_cart = findViewById(R.id.count_cart);
+        tvCartNull = findViewById(R.id.tv_cart_null);
+        tvCartNull.setVisibility(View.GONE);
     }
 
     private void setUi() {
-        String countCart = String.valueOf(shopDatabase.cartDAO().getListCartUser(user.getUserId()).size());
-        count_cart.setText("("+ countCart+")");
+        int countCart = shopDatabase.cartDAO().getListCartUser(user.getId()).size();
+        count_cart.setText("(" + countCart + ")");
+        if (countCart == 0) {
+            tvCartNull.setVisibility(View.VISIBLE);
+        }
     }
 
     private void initListener() {
@@ -105,6 +110,10 @@ public class CartActivity extends AppCompatActivity {
         tv_buy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (selectedItems.size() == 0) {
+                    Toast.makeText(CartActivity.this, "Vui lòng chọn sản phẩm", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 Intent intent = new Intent(CartActivity.this, PayActivity.class);
                 String selectItemsJson = new Gson().toJson(selectedItems);
                 intent.putExtra("selectItemsJson", selectItemsJson);
@@ -139,23 +148,37 @@ public class CartActivity extends AppCompatActivity {
 
     private void recyclerViewCart() {
 //        Log.d(">>>", String.valueOf(isCheckAll));
-        cartAdapter = new CartAdapter( mContext,this, isCheckAll);
+        cartAdapter = new CartAdapter( mContext,this);
         LinearLayoutManager linearLayout = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         rcv_cart.setLayoutManager(linearLayout);
         cartAdapter.setData(getListCart());
 
         rcv_cart.setAdapter(cartAdapter);
+
+        // Đặt ClickListener cho mục trong Adapter
+        cartAdapter.setOnItemClickListener(new CartAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(CartItem item) {
+                Intent intent = new Intent(CartActivity.this, DetailProductActivity.class);
+                String productIdJson = new Gson().toJson(item.getProductId());
+
+                // Gửi dữ liệu của mục bằng cách đính kèm nó như một Extra
+                intent.putExtra("productId", productIdJson);
+                startActivity(intent);
+                finish();
+            }
+        });
     }
 
     private List<CartItem> getListCart() {
         List<CartItem> list = new ArrayList<>();
 
-        List<Cart> carts = shopDatabase.cartDAO().getListCartUser(user.getUserId());
-        for (int i = 0; i < carts.size(); i++) {
-            Product product = shopDatabase.cartDAO().getListProductCartById(carts.get(i).getProductId());
+        List<Cart> carts = shopDatabase.cartDAO().getListCartUser(user.getId());
+        for (Cart cart : carts) {
+            Product product = shopDatabase.cartDAO().getListProductCartById(cart.getProductId());
 //            Log.d(">>> check", product.getName());
-            String productType = shopDatabase.productDAO().getProductType(product.getProductId());
-            list.add(new CartItem(carts.get(i).getCartId(), product.getProductId(), product.getImgProductURL(),
+            String productType = shopDatabase.productDAO().getProductType(product.getId());
+            list.add(new CartItem(cart.getId(), product.getId(), product.getImgUrl(),
                     product.getName(), productType, product.getPrice()));
         }
 

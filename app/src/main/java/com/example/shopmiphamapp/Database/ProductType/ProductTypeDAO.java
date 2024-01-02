@@ -13,11 +13,8 @@ public interface ProductTypeDAO {
     @Query("SELECT * FROM product_type")
     List<ProductType> getListProductType();
 
-    @Query("SELECT * FROM product_type where productTypeId= :productTypeId Limit 1")
+    @Query("SELECT * FROM product_type where id= :productTypeId LIMIT 1")
     ProductType getProductTypeById(int productTypeId);
     @Query("DELETE FROM product_type")
     void deleteAllProductTypes();
-
-    @Query("DELETE FROM sqlite_sequence WHERE name='product_type'")
-    void resetProductTypeId();
 }

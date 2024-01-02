@@ -19,23 +19,24 @@ public interface CartDAO {
     void insertCart(Cart cart);
 
     @Query("SELECT * FROM cart where userId= :userId")
-    List<Cart> getListCartUser(int userId);
+    List<Cart> getListCartUser(String userId);
 
     @Query("SELECT * FROM cart")
     LiveData<List<Cart>> getListCartLiveData();
 
-    @Query("SELECT product.* FROM cart INNER JOIN product ON cart.productId = product.productId where cart.productId= :productId")
+    @Query("SELECT product.* FROM cart INNER JOIN product ON cart.productId = product.id where cart.productId= :productId")
     Product getListProductCartById(int productId);
 
-    @Query("SELECT * FROM cart WHERE productId= :productId LIMIT 1")
-    Cart checkProductExist(int productId);
+    @Query("SELECT EXISTS(SELECT * FROM cart WHERE productId= :productId AND userId= :userId LIMIT 1)")
+    boolean checkProductExist(int productId, String userId);
 
-    @Query("DELETE FROM cart WHERE cartId = :cartId")
-    void deleteCart(int cartId);
+    @Query("DELETE FROM cart WHERE id = :cartId")
+    void deleteCart(String cartId);
+
     @Query("DELETE FROM cart")
     void deleteAllCarts();
-    @Query("DELETE FROM sqlite_sequence WHERE name='cart'")
-    void resetCartId();
+//    @Query("DELETE FROM sqlite_sequence WHERE name='cart'")
+//    void resetCartId();
 }
 
 

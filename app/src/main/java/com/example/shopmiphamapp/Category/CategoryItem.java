@@ -1,7 +1,6 @@
 package com.example.shopmiphamapp.Category;
 
 public class CategoryItem {
-
     private int productTypeId;
     private String imageURL;
     private String name;
@@ -9,7 +8,6 @@ public class CategoryItem {
     public CategoryItem(int productTypeId, String imageURL, String name) {
         this.productTypeId = productTypeId;
         this.imageURL = imageURL;
-
         this.name = name;
     }
 

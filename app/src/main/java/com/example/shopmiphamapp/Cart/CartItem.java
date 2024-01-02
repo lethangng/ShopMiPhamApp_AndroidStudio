@@ -1,11 +1,11 @@
 package com.example.shopmiphamapp.Cart;
 
 public class CartItem {
-    private int cartId, productId;
-    private int price, count;
+    private String cartId;
+    private int price, count, productId;
     private String productName, productType, imgURL;
 
-    public CartItem(int cartId,int productId, String imgURL, String productName, String productType, int price) {
+    public CartItem(String cartId,int productId, String imgURL, String productName, String productType, int price) {
         this.cartId = cartId;
         this.productId = productId;
         this.imgURL = imgURL;
@@ -15,11 +15,11 @@ public class CartItem {
         this.count = 1;
     }
 
-    public int getCartId() {
+    public String getCartId() {
         return cartId;
     }
 
-    public void setCartId(int cartId) {
+    public void setCartId(String cartId) {
         this.cartId = cartId;
     }
 

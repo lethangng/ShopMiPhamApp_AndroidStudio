@@ -6,13 +6,13 @@
         <item name="colorPrimaryVariant">@color/lavender</item>
         <item name="colorOnPrimary">@color/white</item>
 
-        <item name="colorSecondary">@color/teal_200</item>
-        <item name="android:navigationBarColor">@color/white</item>
-        <item name="android:navigationBarDividerColor">@color/white</item>
+        <item name="colorSecondary">@color/lavender</item>
+<!--        <item name="android:navigationBarColor">@color/white</item>-->
+<!--        <item name="android:navigationBarDividerColor">@color/white</item>-->
 
-        <item name="android:windowTranslucentStatus">true</item>
-        <item name="android:windowTranslucentNavigation">true</item>
-        <item name="android:statusBarColor">@android:color/transparent</item>
+<!--        <item name="android:windowTranslucentStatus">true</item>-->
+<!--        <item name="android:windowTranslucentNavigation">true</item>-->
+<!--        <item name="android:statusBarColor">@android:color/transparent</item>-->
     </style>
 
     <style name="Theme.ShopMiPhamApp" parent="Base.Theme.ShopMiPhamApp" />
@@ -22,7 +22,7 @@
         <item name="windowNoTitle">true</item>
     </style>
 
-<!--    <style name="Theme.ShopMiPhamApp.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />-->
+    <style name="Theme.ShopMiPhamApp.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
-<!--    <style name="Theme.ShopMiPhamApp.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />-->
+    <style name="Theme.ShopMiPhamApp.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>

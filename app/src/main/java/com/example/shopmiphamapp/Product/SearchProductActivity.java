@@ -32,7 +32,7 @@ public class SearchProductActivity extends AppCompatActivity {
     private ImageButton btnSearch;
     private ShopDatabase shopDatabase;
 
-    private String productKey;
+    private String productKeyRequest;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,8 +41,7 @@ public class SearchProductActivity extends AppCompatActivity {
 
         shopDatabase = ShopDatabase.getInstance(this);
 
-        String productKeyRequest = getIntent().getStringExtra("productKey");
-        productKey = "%" + productKeyRequest + "%";
+        productKeyRequest = getIntent().getStringExtra("productKey");
 
         initUi();
         setUi(productKeyRequest);
@@ -73,7 +72,8 @@ public class SearchProductActivity extends AppCompatActivity {
                     return;
                 }
 
-                productKey = "%" + searchValue +"%";
+                productKeyRequest = searchValue;
+
                 recyclerViewProduct();
             }
         });
@@ -114,11 +114,11 @@ public class SearchProductActivity extends AppCompatActivity {
     private List<ProductItem> getListProduct() {
         List<ProductItem> listProduct = new ArrayList<>();
 
-        List<Product> products = shopDatabase.productDAO().getProductByName(productKey);
-        Log.d("products", String.valueOf(products));
+        List<Product> products = shopDatabase.productDAO().getProductByName(productKeyRequest);
+//        Log.d("products", String.valueOf(products));
         for(Product product: products) {
-            String productType = shopDatabase.productDAO().getProductType(product.getProductId());
-            listProduct.add(new ProductItem(product.getProductId(), product.getImgProductURL(),
+            String productType = shopDatabase.productDAO().getProductType(product.getId());
+            listProduct.add(new ProductItem(product.getId(), product.getImgUrl(),
                     product.getName(), productType, product.getPrice(), product.getSold()));
         }
         return listProduct;

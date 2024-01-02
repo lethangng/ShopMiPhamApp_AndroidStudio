@@ -1,41 +1,55 @@
 package com.example.shopmiphamapp.Database.Product;
 
+import androidx.annotation.NonNull;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "product")
 public class Product {
-    @PrimaryKey(autoGenerate = true)
-    private int productId;
+    @PrimaryKey
+    @NonNull
+    private int id;
     private String name;
     private String description;
-    private String imgProductURL;
-    private int imgProductListId;
+    private String imgUrl;
+//    private int imgListId;
     private int price;
     private int sold;
-    private int categoryId;
     private int productTypeId;
     private int quantity;
 
-    public Product(String name, String description, String imgProductURL, int imgProductListId, int price, int sold, int categoryId, int productTypeId, int quantity) {
+    public Product(@NonNull int id, String name, String description, String imgUrl,
+                   int price, int sold, int productTypeId, int quantity) {
+        this.id = id;
         this.name = name;
         this.description = description;
-//        this.imgProduct = imgProduct;
-        this.imgProductURL = imgProductURL;
-        this.imgProductListId = imgProductListId;
+        this.imgUrl = imgUrl;
         this.price = price;
         this.sold = sold;
-        this.categoryId = categoryId;
         this.productTypeId = productTypeId;
         this.quantity = quantity;
     }
 
-    public int getProductId() {
-        return productId;
+    @Ignore
+    public Product(String name, String description, String imgUrl,
+                   int price, int sold, int productTypeId, int quantity) {
+        this.name = name;
+        this.description = description;
+        this.imgUrl = imgUrl;
+        this.price = price;
+        this.sold = sold;
+        this.productTypeId = productTypeId;
+        this.quantity = quantity;
     }
 
-    public void setProductId(int productId) {
-        this.productId = productId;
+    @NonNull
+    public int getId() {
+        return id;
+    }
+
+    public void setId(@NonNull int id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -54,28 +68,12 @@ public class Product {
         this.description = description;
     }
 
-//    public int getImgProduct() {
-//        return imgProduct;
-//    }
-//
-//    public void setImgProduct(int imgProduct) {
-//        this.imgProduct = imgProduct;
-//    }
-
-    public String getImgProductURL() {
-        return imgProductURL;
+    public String getImgUrl() {
+        return imgUrl;
     }
 
-    public void setImgProductURL(String imgProductURL) {
-        this.imgProductURL = imgProductURL;
-    }
-
-    public int getImgProductListId() {
-        return imgProductListId;
-    }
-
-    public void setImgProductListId(int imgProductListId) {
-        this.imgProductListId = imgProductListId;
+    public void setImgUrl(String imgUrl) {
+        this.imgUrl = imgUrl;
     }
 
     public int getPrice() {
@@ -92,14 +90,6 @@ public class Product {
 
     public void setSold(int sold) {
         this.sold = sold;
-    }
-
-    public int getCategoryId() {
-        return categoryId;
-    }
-
-    public void setCategoryId(int categoryId) {
-        this.categoryId = categoryId;
     }
 
     public int getProductTypeId() {

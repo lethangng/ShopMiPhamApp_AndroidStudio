@@ -7,7 +7,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
+
 import com.example.shopmiphamapp.Database.Bill.Bill;
 import com.example.shopmiphamapp.Database.Product.Product;
 import com.example.shopmiphamapp.Database.Product_Bill.Product_Bill;
@@ -26,6 +29,7 @@ public class BillActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private ShopDatabase shopDatabase;
     private User user;
+    private TextView tvNull;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +40,7 @@ public class BillActivity extends AppCompatActivity {
         user = HomeActivity.userPublic;
 
         intiUi();
+        setUi();
 
         backNavigation();
         recyclerViewBill();
@@ -44,6 +49,14 @@ public class BillActivity extends AppCompatActivity {
     private void intiUi() {
         toolbar = findViewById(R.id.back_navigation);
         rcv_bill = findViewById(R.id.rcv_bill);
+        tvNull = findViewById(R.id.tv_null);
+        tvNull.setVisibility(View.GONE);
+    }
+    private void setUi() {
+        int countBill = shopDatabase.billDAO().getBillByUserId(user.getId()).size();
+        if (countBill == 0) {
+            tvNull.setVisibility(View.VISIBLE);
+        }
     }
     private void backNavigation() {
         setSupportActionBar(toolbar);
@@ -71,7 +84,7 @@ public class BillActivity extends AppCompatActivity {
             @Override
             public void onItemClick(BillItem item) {
                 Intent intent = new Intent(BillActivity.this, DetailBillActivity.class);
-                String billId = new Gson().toJson(item.getBillId());
+                String billId = item.getBillId();
                 intent.putExtra("billId", billId);
                 startActivity(intent);
             }
@@ -80,16 +93,20 @@ public class BillActivity extends AppCompatActivity {
 
     private List<BillItem> getListBill() {
         List<BillItem> list = new ArrayList<>();
-        List<Bill> bills = shopDatabase.billDAO().getBillByUserId(user.getUserId());
+        List<Bill> bills = shopDatabase.billDAO().getBillByUserId(user.getId());
+//        Log.d("bills", bills.toString());
         for (Bill bill : bills) {
             List<Product_Bill> productBills = shopDatabase.productBillDAO().getListProductBill(bill.getId());
-            Product_Bill productBill = productBills.get(0);
-            Product product = shopDatabase.productDAO().getProductById(productBill.getProductId());
-            String productType = shopDatabase.productTypeDAO().getProductTypeById(product.getProductId()).getName();
+            if (productBills != null && productBills.size() > 0) {
+                Product_Bill productBill = productBills.get(0);
+                Product product = shopDatabase.productDAO().getProductById(productBill.getProductId());
+                String productType = shopDatabase.productTypeDAO().getProductTypeById(product.getProductTypeId()).getName();
 
-            list.add(new BillItem(bill.getId(), productBill.getProductId(), product.getImgProductURL(),
-                    product.getPrice(), productBill.getQuantity(), bill.getTotalMonney(),
-                    product.getName(), productType, productBills.size()));
+                list.add(new BillItem(bill.getId(), productBill.getProductId(), product.getImgUrl(),
+                        product.getPrice(), productBill.getQuantity(), bill.getTotalMoney(),
+                        product.getName(), productType, productBills.size()));
+            }
+
         }
 
         return list;

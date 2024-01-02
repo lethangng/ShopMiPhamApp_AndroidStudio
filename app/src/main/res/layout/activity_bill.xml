@@ -34,6 +34,19 @@
             android:layout_marginLeft="50dp"
             android:textColor="#fff"/>
     </RelativeLayout>
+
+    <TextView
+        android:id="@+id/tv_null"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Lịch sử mua hàng trống"
+        android:textStyle="bold"
+        android:textSize="30sp"
+        android:gravity="center_horizontal"
+        android:layout_marginTop="30dp"
+        android:layout_below="@+id/wrap_header"
+        android:textColor="@color/gray"/>
+
     <androidx.core.widget.NestedScrollView
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:layout_below="@+id/wrap_header"

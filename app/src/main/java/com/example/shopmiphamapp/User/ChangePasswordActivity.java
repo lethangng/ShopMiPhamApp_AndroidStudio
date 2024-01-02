@@ -116,7 +116,6 @@ public class ChangePasswordActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 onBackPressed();
-                HomeActivity.navigationView.setCheckedItem(R.id.nav_home);
             }
         });
     }
@@ -143,7 +142,7 @@ public class ChangePasswordActivity extends AppCompatActivity {
                         } else {
                             Intent intent = new Intent(ChangePasswordActivity.this, ReAuthenticateUserActivity.class);
                             startActivity(intent);
-//                            Toast.makeText(ChangePasswordActivity.this, "Thay đổi mật khẩu thất bại.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(ChangePasswordActivity.this, "Vui lòng xác thực người dùng.", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });

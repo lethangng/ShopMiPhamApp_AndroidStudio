@@ -21,8 +21,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.shopmiphamapp.Database.ShopDatabase;
 import com.example.shopmiphamapp.Helper.Helper;
 import com.example.shopmiphamapp.R;
-import com.squareup.picasso.Callback;
-import com.squareup.picasso.Picasso;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,17 +43,25 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHodel>
     public int getCountListCart() {
         return listCart.size();
     }
-    public boolean isCheckAll;
 
     // Xet moi truong de tham chieu den cha
     public CartActivity cartActivity;
-    public CartAdapter(Context mContext, CartActivity cartActivity, boolean isCheckAll) {
-        this.mContext = mContext;
-        this.cartActivity = cartActivity;
-        this.isCheckAll = isCheckAll;
+
+    private OnItemClickListener listener;
+    public interface OnItemClickListener {
+        void onItemClick(CartItem item);
     }
 
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.listener = listener;
+    }
+
+    public CartAdapter(Context mContext, CartActivity cartActivity) {
+        this.mContext = mContext;
+        this.cartActivity = cartActivity;
+    }
     private ShopDatabase shopDatabase = ShopDatabase.getInstance(cartActivity);
+
     public void setData(List<CartItem> list) {
         listCart = list;
         notifyDataSetChanged();
@@ -71,82 +80,36 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHodel>
         if (cartItem == null) {
             return;
         }
-        Picasso.get()
-                .load(cartItem.getImgURL())
-                .placeholder(R.drawable.layout_none) // Ảnh placeholder hiển thị trong quá trình tải
-                .error(R.drawable.layout_none) // Ảnh hiển thị khi có lỗi xảy ra
-                .into(holder.img_cart, new Callback() {
-                    @Override
-                    public void onSuccess() {
-                        // Quá trình tải ảnh thành công, ẩn ProgressBar và hiển thị ImageView
-                        holder.progressBar.setVisibility(View.GONE);
-                        holder.img_cart.setVisibility(View.VISIBLE);
-                    }
 
-                    @Override
-                    public void onError(Exception e) {
-                        // Xử lý khi có lỗi xảy ra trong quá trình tải ảnh
-                        holder.progressBar.setVisibility(View.GONE);
-                        throw new RuntimeException(e);
-                    }
-                });
-//        holder.img_cart.setImageResource(cartItem.getImgId());
-        holder.tv_product_name.setText(cartItem.getProductName());
+        Helper.loadImage(cartItem.getImgURL(), holder.img_cart, holder.progressBar);
+
+        String name = Helper.formatString(cartItem.getProductName(), 25);
+        holder.tv_product_name.setText(name);
         holder.tv_type_product.setText(cartItem.getProductType());
 
         String price = Helper.formatPrice(cartItem.getPrice());
         holder.tv_price.setText(price);
 
-        int[] count = {listCart.get(position).getCount()};
-        holder.tv_count.setText(String.valueOf(count[0]));
-//        Log.d(">>>>>", String.valueOf(count[0]));
+        holder.tv_count.setText(String.valueOf(cartItem.getCount()));
 
         holder.btn_minus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (count[0] == 1) {
-                    return;
-                }
-                count[0]--;
-                String sCount = String.valueOf(count[0]);
-                // Set lai tv hien thi
-                holder.tv_count.setText(sCount);
-
-                // Set lai count cua cartItem => Ty nua chuyen no sang Activity ThanhToan
-                cartItem.setCount(count[0]);
-
-                // Kiem tra xem co trong list khong, co thi moi tru tien
-                if (selectedItems.contains(cartItem)) {
-                    totalPrice -= cartItem.getPrice();
-                    cartActivity.updateTotalPrice();
-
-                    CartItem selectedCartItem = findSelectedItem(cartItem);
-                    selectedCartItem.setCount(count[0]);
-
-                }
+                handleMinusCount(cartItem, holder.tv_count);
             }
         });
 
         holder.btn_add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                count[0]++;
-                holder.tv_count.setText(String.valueOf(count[0]));
-
-                // Nếu cartItem này có trong selectedItems thì xử lý khối này
-                if (selectedItems.contains(cartItem)) {
-                    totalPrice += cartItem.getPrice();
-                    cartActivity.updateTotalPrice();
-
-                    CartItem selectedCartItem = findSelectedItem(cartItem);
-                    selectedCartItem.setCount(count[0]);
-                }
+                handleAddCount(cartItem, holder.tv_count);
             }
         });
 
         // Thiết lập trạng thái chọn cho CheckBox
+        // itemStateArray là cái cái array quản lý trạng thái check/uncheck của các checkbox
+        // Đại khái là set trạng thái ban đầu cho các checkbox = false
         holder.cb_select.setChecked(itemStateArray.get(position,false));
-//        Log.d("countItem", itemStateArray.toString());
         holder.cb_select.setChecked(cartActivity.isCheckAll);
 
         // Xử lý sự kiện khi người dùng chọn hoặc hủy chọn CheckBox
@@ -160,15 +123,12 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHodel>
 
                     // Them vao list
                     selectedItems.add(cartItem);
-//                    Log.d("countBuy1", selectedItems.toString());
                     cartActivity.updateTotalPrice();
                 } else {
-//                    isCheckAll = false;
                     totalPrice -= cartItem.getCount() * cartItem.getPrice();
 
                     // Xoa khoi list
                     selectedItems.remove(cartItem);
-//                    Log.d("countBuy1", selectedItems.toString());
                     cartActivity.updateTotalPrice();
                 }
             }
@@ -177,30 +137,98 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHodel>
         holder.btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(cartActivity);
-                builder.setMessage("Bạn có chắc chắn muốn xóa không?")
-                        .setPositiveButton("Có", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                // Xử lý xóa ở đây
-//                                Log.d("delete", String.valueOf(listCart.get(position).getCartId()));
-                                shopDatabase.cartDAO().deleteCart(listCart.get(position).getCartId());
-                                listCart.remove(position);
-                                notifyDataSetChanged();
-                                cartActivity.updateTotalPrice();
-                                Toast.makeText(cartActivity, "Đã xóa sản phẩm khỏi giỏ hàng!", Toast.LENGTH_LONG).show();
-                            }
-                        })
-                        .setNegativeButton("Không", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                // Hủy bỏ xóa
-                                dialog.cancel();
-                            }
-                        });
-
-                AlertDialog dialog = builder.create();
-                dialog.show();
+                handleClickDelete(position);
             }
         });
+        // Xu ly su kien click, duoc su dung o activity cha
+        // Đặt ClickListener cho mục
+        holder.img_cart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (listener != null) {
+                    listener.onItemClick(cartItem);
+                }
+            }
+        });
+    }
+
+    private void handleAddCount(CartItem cartItem, TextView tvCount) {
+        int mCount = cartItem.getCount();
+
+        String sCount = String.valueOf(mCount + 1);
+        // Set lai tv hien thi
+        tvCount.setText(sCount);
+        cartItem.setCount(mCount + 1);
+
+        // Nếu cartItem này có trong selectedItems thì xử lý khối này
+        if (selectedItems.contains(cartItem)) {
+            totalPrice += cartItem.getPrice();
+            cartActivity.updateTotalPrice();
+
+            CartItem selectedCartItem = findSelectedItem(cartItem);
+            selectedCartItem.setCount(mCount + 1);
+        }
+    }
+
+    private void handleMinusCount(CartItem cartItem, TextView tvCount) {
+        int mCount = cartItem.getCount();
+        if (mCount == 1) {
+            return;
+        }
+        String sCount = String.valueOf(mCount - 1);
+        // Set lai tv hien thi
+        tvCount.setText(sCount);
+
+        // Set lai count cua cartItem => Ty nua chuyen no sang Activity ThanhToan
+        cartItem.setCount(mCount - 1);
+
+        // Kiem tra xem co trong list được chọn khong, co thi moi tru tien
+        if (selectedItems.contains(cartItem)) {
+            totalPrice -= cartItem.getPrice();
+            cartActivity.updateTotalPrice();
+
+            CartItem selectedCartItem = findSelectedItem(cartItem);
+            selectedCartItem.setCount(mCount - 1);
+        }
+    }
+
+    private void handleClickDelete(int position) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(cartActivity);
+        builder.setMessage("Bạn có chắc chắn muốn xóa không?")
+                .setPositiveButton("Có", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // Xử lý xóa ở đây
+                        String cartId = listCart.get(position).getCartId();
+                        FirebaseFirestore db = FirebaseFirestore.getInstance();
+                        db.collection("cart").document(cartId).delete()
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void unused) {
+                                        shopDatabase.cartDAO().deleteCart(cartId);
+                                        listCart.remove(position);
+                                        notifyDataSetChanged();
+                                        cartActivity.updateTotalPrice();
+                                        Toast.makeText(cartActivity, "Đã xóa sản phẩm khỏi giỏ hàng!", Toast.LENGTH_LONG).show();
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Toast.makeText(cartActivity, "Xóa sản phẩm khỏi giỏ hàng thất bại!", Toast.LENGTH_LONG).show();
+                                    }
+                                });
+
+                    }
+                })
+                .setNegativeButton("Không", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // Hủy bỏ xóa
+                        dialog.cancel();
+                    }
+                });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
     @Override

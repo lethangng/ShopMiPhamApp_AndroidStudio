@@ -75,7 +75,8 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
                 });
 
 //        holder.imgProduct.setImageResource(R.drawable.product_1);
-        holder.nameProduct.setText(productItem.getName());
+        String name = Helper.formatString(productItem.getName(), 25);
+        holder.nameProduct.setText(name);
         String price = Helper.formatPrice(productItem.getPrice());
         holder.priceProduct.setText(price);
 

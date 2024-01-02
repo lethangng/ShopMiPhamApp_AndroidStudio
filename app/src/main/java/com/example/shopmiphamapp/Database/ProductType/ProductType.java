@@ -1,46 +1,40 @@
 package com.example.shopmiphamapp.Database.ProductType;
 
+import androidx.annotation.NonNull;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "product_type")
 public class ProductType {
-    @PrimaryKey(autoGenerate = true)
-    private int productTypeId;
+    @PrimaryKey
+    @NonNull
+    private int id;
     private String name;
-    private String productTypeImgURL;
+    private String imgUrl;
     private String description;
 
-    public ProductType(String name, String productTypeImgURL,  String description) {
+    public ProductType(@NonNull int id, String name, String imgUrl, String description) {
+        this.id = id;
         this.name = name;
-        this.productTypeImgURL = productTypeImgURL;
+        this.imgUrl = imgUrl;
         this.description = description;
     }
 
-
-    public int getProductTypeId() {
-        return productTypeId;
+    @Ignore
+    public ProductType(String name, String imgUrl, String description) {
+        this.name = name;
+        this.imgUrl = imgUrl;
+        this.description = description;
     }
 
-    public void setProductTypeId(int productTypeId) {
-        this.productTypeId = productTypeId;
+    public int getId() {
+        return id;
     }
 
-    public String getProductTypeImgURL() {
-        return productTypeImgURL;
+    public void setId(int id) {
+        this.id = id;
     }
-
-    public void setProductTypeImgURL(String productTypeImgURL) {
-        this.productTypeImgURL = productTypeImgURL;
-    }
-
-//    public int getProductTypeImg() {
-//        return productTypeImg;
-//    }
-//
-//    public void setProductTypeImg(int productTypeImg) {
-//        this.productTypeImg = productTypeImg;
-//    }
 
     public String getName() {
         return name;
@@ -48,6 +42,14 @@ public class ProductType {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getImgUrl() {
+        return imgUrl;
+    }
+
+    public void setImgUrl(String imgUrl) {
+        this.imgUrl = imgUrl;
     }
 
     public String getDescription() {

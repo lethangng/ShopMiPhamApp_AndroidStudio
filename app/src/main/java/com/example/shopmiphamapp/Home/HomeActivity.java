@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
@@ -20,7 +21,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -34,11 +37,13 @@ import com.example.shopmiphamapp.Category.CategoryAdapter;
 import com.example.shopmiphamapp.Category.CategoryItem;
 import com.example.shopmiphamapp.Category.CategoryProductActivity;
 import com.example.shopmiphamapp.Database.Carousel.Carousel;
+import com.example.shopmiphamapp.Database.Cart.Cart;
 import com.example.shopmiphamapp.Database.Product.Product;
 import com.example.shopmiphamapp.Database.ProductType.ProductType;
 import com.example.shopmiphamapp.Database.ShopDatabase;
 import com.example.shopmiphamapp.Database.User.User;
 import com.example.shopmiphamapp.FavoriteProduct.FavoriteProductActivity;
+import com.example.shopmiphamapp.Helper.Helper;
 import com.example.shopmiphamapp.Login.LoginActivity;
 import com.example.shopmiphamapp.Product.DetailProductActivity;
 import com.example.shopmiphamapp.Product.ProductItem;
@@ -51,8 +56,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.gson.Gson;
 import com.makeramen.roundedimageview.RoundedImageView;
-import com.squareup.picasso.Callback;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,27 +69,13 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     private Toolbar toolbar;
     private ViewPager2 mViewPager2;
     private CircleIndicator3 mCircleIndicator3;
-    private List<CarouselItem> mListCarousel;
-
-//    RecyclerView product
+    private LiveData<List<Cart>> cartLiveData;
     private RecyclerView rcvProduct, rcvCategory;
-    private ProductAdapter productAdapter;
-
-//  RecyclerView Category
-    private CategoryAdapter categoryAdapter;
-
     private ImageButton btn_cart, btn_chat, btnSearch;
     private EditText edtSearch;
     public static TextView count_cart;
-
-    // Auto slider
-    private Handler mHandler;
-    private Runnable mRunnable;
-
     private ProgressBar progressBar;
-
     public static User userPublic;
-
     private FirebaseUser userFirebase;
 
     @Override
@@ -98,25 +87,22 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         if (userFirebase == null) {
             return;
         }
-        String userEmail = userFirebase.getEmail();
         shopDatabase = ShopDatabase.getInstance(this);
-
-        FrameLayout progressLayout = findViewById(R.id.progress_layout);
 
         initUi();
 
-//        // Hiển thị màn hình xám với ProgressBar
-        progressLayout.setVisibility(View.VISIBLE);
+        // Hiển thị màn hình xám với ProgressBar
+        FrameLayout progressLayout = findViewById(R.id.progress_layout);
+        Helper.handleLoading(true, progressLayout, progressBar);
 
         shopDatabase.isDatabaseInitialized().observe(this, new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean isInitialized) {
                 if (isInitialized) {
                     // Ẩn màn hình xám
-                    progressLayout.setVisibility(View.GONE);
-                    progressBar.setVisibility(View.GONE);
+                    Helper.handleLoading(false, progressLayout, progressBar);
 
-                    userPublic = shopDatabase.userDAO().getUser(userEmail);
+                    userPublic = shopDatabase.userDAO().getUser(userFirebase.getUid());
 
                     setUi();
 
@@ -127,6 +113,17 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                     carousel();
 
                     initListener();
+
+                    // Bat su thay doi cua cart trong database, neu thay doi thi sua count_cart
+                    cartLiveData = shopDatabase.cartDAO().getListCartLiveData();
+                    cartLiveData.observe(HomeActivity.this, new Observer<List<Cart>>() {
+                        @Override
+                        public void onChanged(List<Cart> carts) {
+                            String userId = userPublic.getId();
+                            String countCart = String.valueOf(shopDatabase.cartDAO().getListCartUser(userId).size());
+                            count_cart.setText(countCart);
+                        }
+                    });
                 }
             }
         });
@@ -150,12 +147,9 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void setUi() {
-        int userId = userPublic.getUserId();
-        // Check xem có tìm thấy không
-        if (userId > 0) {
-            String countCart = String.valueOf(shopDatabase.cartDAO().getListCartUser(userId).size());
-            count_cart.setText(countCart);
-        }
+        String userId = userPublic.getId();
+        String countCart = String.valueOf(shopDatabase.cartDAO().getListCartUser(userId).size());
+        count_cart.setText(countCart);
     }
 
     private void initListener() {
@@ -213,6 +207,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             startActivity(intent);
         } else if (itemId == R.id.nav_logout) {
             FirebaseAuth.getInstance().signOut();
+            ShopDatabase.destroyInstance();
             Intent intent = new Intent(HomeActivity.this, LoginActivity.class);
             startActivity(intent);
             finishAffinity();
@@ -258,46 +253,28 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             imageUser.setImageResource(R.drawable.img_avatar);
         } else {
 //            Log.d("uriOK", String.valueOf(userFirebase.getPhotoUrl()));
-            Picasso.get()
-                    .load(userFirebase.getPhotoUrl())
-                    .placeholder(R.drawable.img_avatar) // Ảnh placeholder hiển thị trong quá trình tải
-                    .error(R.drawable.img_avatar) // Ảnh hiển thị khi có lỗi xảy ra
-                    .into(imageUser, new Callback() {
-                        @Override
-                        public void onSuccess() {
-                            // Quá trình tải ảnh thành công, ẩn ProgressBar và hiển thị ImageView
-                            progressBarHeader.setVisibility(View.GONE);
-                            imageUser.setVisibility(View.VISIBLE);
-                        }
-
-                        @Override
-                        public void onError(Exception e) {
-                            // Xử lý khi có lỗi xảy ra trong quá trình tải ảnh
-                            progressBarHeader.setVisibility(View.GONE);
-                            throw new RuntimeException(e);
-                        }
-                    });
+            Helper.loadImageUri(userFirebase.getPhotoUrl(), imageUser, progressBarHeader);
         }
     }
 
     private void carousel() {
+        CarouselAdapter adapter = new CarouselAdapter(HomeActivity.this);
+        adapter.setData(getListCarousel());
+        mViewPager2.setAdapter(adapter);
+        mCircleIndicator3.setViewPager(mViewPager2);
+
         // Auto slider
-        mHandler = new Handler();
-        mRunnable = new Runnable() {
+        Handler mHandler = new Handler();
+        Runnable mRunnable = new Runnable() {
             @Override
             public void run() {
-                if (mViewPager2.getCurrentItem() == mListCarousel.size() - 1) {
+                if (mViewPager2.getCurrentItem() == adapter.getItemCount() - 1) {
                     mViewPager2.setCurrentItem(0);
                 } else {
                     mViewPager2.setCurrentItem(mViewPager2.getCurrentItem() + 1);
                 }
             }
         };
-
-        mListCarousel = getListCarousel();
-        CarouselAdapter adapter = new CarouselAdapter(mListCarousel);
-        mViewPager2.setAdapter(adapter);
-        mCircleIndicator3.setViewPager(mViewPager2);
 
 //        Lang nghe su kien chuyen page
         mViewPager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
@@ -311,7 +288,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void recyclerViewProduct() {
-        productAdapter = new ProductAdapter(this);
+        ProductAdapter productAdapter = new ProductAdapter(this);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
         rcvProduct.setLayoutManager(gridLayoutManager);
         productAdapter.setData(getListProduct());
@@ -335,7 +312,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this,
                 LinearLayoutManager.HORIZONTAL, false);
         rcvCategory.setLayoutManager(linearLayoutManager);
-        categoryAdapter = new CategoryAdapter(this);
+        CategoryAdapter categoryAdapter = new CategoryAdapter(this);
         categoryAdapter.setData(getCategory());
         rcvCategory.setAdapter(categoryAdapter);
 
@@ -355,7 +332,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         List<CarouselItem> list = new ArrayList<>();
         List<Carousel> carousels = shopDatabase.carouselDAO().getListCarousel();
         for(Carousel carousel : carousels) {
-            list.add(new CarouselItem(carousel.getCarouselImg()));
+            list.add(new CarouselItem(carousel.getImgUrl()));
         }
         return list;
     }
@@ -364,8 +341,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         List<ProductItem> listProduct = new ArrayList<>();
         List<Product> products = ShopDatabase.getInstance(this).productDAO().getListProduct();
         for(Product product: products) {
-            String productType = shopDatabase.productDAO().getProductType(product.getProductId());
-            listProduct.add(new ProductItem(product.getProductId(), product.getImgProductURL(),
+            String productType = shopDatabase.productDAO().getProductType(product.getId());
+            listProduct.add(new ProductItem(product.getId(), product.getImgUrl(),
                     product.getName(), productType, product.getPrice(), product.getSold()));
         }
 
@@ -376,8 +353,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
         List<ProductType> productTypeList = shopDatabase.productTypeDAO().getListProductType();
         for (ProductType productType : productTypeList) {
-            listCategory.add(new CategoryItem(productType.getProductTypeId(),
-                    productType.getProductTypeImgURL(), productType.getName()));
+            listCategory.add(new CategoryItem(productType.getId(),
+                    productType.getImgUrl(), productType.getName()));
         }
 
         return listCategory;

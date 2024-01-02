@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
+import com.example.shopmiphamapp.Helper.Helper;
 import com.example.shopmiphamapp.R;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
@@ -36,7 +37,6 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
 
     public void setData(List<CategoryItem> list) {
         this.lCategory = list;
-//        Load du lieu len Adapter
         notifyDataSetChanged();
     }
     @NonNull
@@ -53,31 +53,10 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
             return;
         }
 
-//        holder.progressBar.setVisibility(View.VISIBLE);
+        Helper.loadImage(categoryItem.getImageURL(), holder.imgCategory, holder.progressBar);
 
-        Picasso.get()
-                .load(categoryItem.getImageURL())
-                .placeholder(R.drawable.layout_none) // Ảnh placeholder hiển thị trong quá trình tải
-                .error(R.drawable.layout_none) // Ảnh hiển thị khi có lỗi xảy ra
-                .into(holder.imgCategory, new Callback() {
-                    @Override
-                    public void onSuccess() {
-                        // Quá trình tải ảnh thành công, ẩn ProgressBar và hiển thị ImageView
-                        holder.progressBar.setVisibility(View.GONE);
-                        holder.imgCategory.setVisibility(View.VISIBLE);
-                    }
-
-                    @Override
-                    public void onError(Exception e) {
-                        // Xử lý khi có lỗi xảy ra trong quá trình tải ảnh
-                        holder.progressBar.setVisibility(View.GONE);
-                        throw new RuntimeException(e);
-                    }
-                });
-
-
-//        holder.imgCategory.setImageResource(categoryItem.getImage());
-        holder.tvNameCategory.setText(categoryItem.getName());
+        String name = Helper.formatString(categoryItem.getName(), 13);
+        holder.tvNameCategory.setText(name);
 
         // Xu ly su kien click, duoc su dung o activity cha
         // Đặt ClickListener cho mục

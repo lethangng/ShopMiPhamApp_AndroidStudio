@@ -1,8 +1,10 @@
 package com.example.shopmiphamapp.Database.Cart;
 
+import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import com.example.shopmiphamapp.Database.Product.Product;
@@ -10,24 +12,34 @@ import com.example.shopmiphamapp.Database.User.User;
 
 @Entity(tableName = "cart")
 public class Cart {
-    @PrimaryKey(autoGenerate = true)
-    private int cartId;
+    @PrimaryKey
+    @NonNull
+    private String id;
     private int productId;
-    private int userId;
-    @ColumnInfo(defaultValue = "1")
+    private String userId;
     private int quantity;
 
-    public Cart(int productId, int userId) {
+    public Cart(String id, int productId, String userId) {
+        this.id = id;
         this.productId = productId;
         this.userId = userId;
+        this.quantity = 1;
     }
 
-    public int getCartId() {
-        return cartId;
+    @Ignore
+    public Cart(int productId, String userId) {
+        this.productId = productId;
+        this.userId = userId;
+        this.quantity = 1;
     }
 
-    public void setCartId(int cartId) {
-        this.cartId = cartId;
+    @NonNull
+    public String getId() {
+        return id;
+    }
+
+    public void setId(@NonNull String id) {
+        this.id = id;
     }
 
     public int getProductId() {
@@ -38,11 +50,11 @@ public class Cart {
         this.productId = productId;
     }
 
-    public int getUserId() {
+    public String getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 

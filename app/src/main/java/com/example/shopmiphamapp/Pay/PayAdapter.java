@@ -38,31 +38,18 @@ public class PayAdapter extends RecyclerView.Adapter<PayAdapter.PayViewHodel> {
         if (payItem == null) {
             return;
         }
-        Picasso.get()
-                .load(payItem.getImgURL())
-                .placeholder(R.drawable.layout_none) // Ảnh placeholder hiển thị trong quá trình tải
-                .error(R.drawable.layout_none) // Ảnh hiển thị khi có lỗi xảy ra
-                .into(holder.img_product, new Callback() {
-                    @Override
-                    public void onSuccess() {
-                        // Quá trình tải ảnh thành công, ẩn ProgressBar và hiển thị ImageView
-                        holder.progressBar.setVisibility(View.GONE);
-                        holder.img_product.setVisibility(View.VISIBLE);
-                    }
 
-                    @Override
-                    public void onError(Exception e) {
-                        // Xử lý khi có lỗi xảy ra trong quá trình tải ảnh
-                        holder.progressBar.setVisibility(View.GONE);
-                        throw new RuntimeException(e);
-                    }
-                });
-//        holder.img_product.setImageResource(payItem.getImgId());
-        holder.tv_product_name.setText(payItem.getProductName());
+        Helper.loadImage(payItem.getImgURL(), holder.img_product, holder.progressBar);
+
+        String name = Helper.formatString(payItem.getProductName(), 25);
+        holder.tv_product_name.setText(name);
+
         holder.tv_type_product.setText(payItem.getProductType());
+
         String price = Helper.formatPrice(payItem.getPrice());
         holder.tv_price.setText(price);
-        holder.tv_pay_count.setText("x" + String.valueOf(payItem.getCount()));
+
+        holder.tv_pay_count.setText("x" + payItem.getCount());
 
     }
 
@@ -81,6 +68,7 @@ public class PayAdapter extends RecyclerView.Adapter<PayAdapter.PayViewHodel> {
 
         public PayViewHodel(@NonNull View itemView) {
             super(itemView);
+            
             img_product = itemView.findViewById(R.id.img_product);
             tv_product_name = itemView.findViewById(R.id.tv_product_name);
             tv_type_product = itemView.findViewById(R.id.tv_type_product);

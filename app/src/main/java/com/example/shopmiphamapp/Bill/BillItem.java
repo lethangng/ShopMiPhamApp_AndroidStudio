@@ -1,11 +1,11 @@
 package com.example.shopmiphamapp.Bill;
 
 public class BillItem {
-    private int billId;
+    private String billId;
     private int productId, price, count, totalPrice, sumProduct;
     private String productName, productType, imgURL;
 
-    public BillItem(int billId, int productId, String imgURL, int price, int count, int totalPrice, String productName, String productType, int sumProduct) {
+    public BillItem(String billId, int productId, String imgURL, int price, int count, int totalPrice, String productName, String productType, int sumProduct) {
         this.billId = billId;
         this.productId = productId;
         this.imgURL = imgURL;
@@ -17,11 +17,11 @@ public class BillItem {
         this.sumProduct = sumProduct;
     }
 
-    public int getBillId() {
+    public String getBillId() {
         return billId;
     }
 
-    public void setBillId(int billId) {
+    public void setBillId(String billId) {
         this.billId = billId;
     }
 

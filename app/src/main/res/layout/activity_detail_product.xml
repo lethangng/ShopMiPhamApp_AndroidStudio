@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     tools:context=".Product.DetailProductActivity">
     <RelativeLayout
         android:id="@+id/wrap_header"
@@ -20,6 +21,19 @@
             app:navigationIcon="@drawable/baseline_arrow_back_24"
             android:background="@color/lavender">
         </androidx.appcompat.widget.Toolbar>
+
+        <TextView
+            android:id="@+id/tv_gio_hang"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Chi tiết sản phẩm"
+            android:textSize="20sp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentBottom="true"
+            android:gravity="center"
+            android:layout_marginLeft="50dp"
+            android:textColor="#fff"/>
 
         <ImageButton
             android:layout_width="wrap_content"
@@ -226,6 +240,8 @@
 
     </androidx.core.widget.NestedScrollView>
 
+
+
     <LinearLayout
         android:layout_width="match_parent"
         android:orientation="horizontal"
@@ -242,6 +258,7 @@
             android:src="@drawable/shopping_cart_icon" />
 
         <TextView
+            android:id="@+id/btn_buy"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -252,5 +269,136 @@
             android:background="@color/lavender"
             android:clickable="true"
             android:foreground="?android:attr/selectableItemBackground"/>
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/layout_pay_bottom"
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#fff"
+        android:padding="10dp"
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:id="@+id/img_product"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:src="@drawable/product_1"
+                    android:scaleType="centerCrop"/>
+                <ProgressBar
+                    android:id="@+id/progressBar"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_centerInParent="true"/>
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_marginLeft="10dp"
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/tv_price_2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="15sp"
+                    android:textColor="@color/red"
+                    android:text="200.000đ"
+                    android:layout_gravity="bottom"/>
+                <TextView
+                    android:id="@+id/tv_sold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="15sp"
+                    android:textColor="@color/gray"
+                    android:text="Kho: 2000"
+                    android:layout_marginTop="5dp"/>
+            </LinearLayout>
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1"/>
+
+            <ImageButton
+                android:id="@+id/btn_close"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/baseline_close_24"
+                android:background="#fff"/>
+        </LinearLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/gray"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Số lượng"
+                android:textColor="#000"/>
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1"/>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintTop_toBottomOf="@+id/tv_price"
+                tools:layout_editor_absoluteX="4dp">
+
+                <ImageButton
+                    android:id="@+id/btn_minus"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:background="@drawable/bg_border"
+                    android:src="@drawable/minus_icon" />
+
+                <TextView
+                    android:id="@+id/tv_count"
+                    android:layout_width="40dp"
+                    android:layout_height="20dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:background="@drawable/bg_border"
+                    android:gravity="center"
+                    android:text="2"
+                    android:textColor="@color/gray"
+                    android:textSize="16sp" />
+
+                <ImageButton
+                    android:id="@+id/btn_add"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:background="@drawable/bg_border"
+                    android:src="@drawable/add_icon" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/btn_pay_2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Mua ngay"
+            android:background="@color/lavender"
+            android:textColor="#fff"
+            android:textSize="18sp"
+            android:gravity="center"
+            android:layout_marginTop="15dp"
+            android:padding="10dp"/>
     </LinearLayout>
 </RelativeLayout>

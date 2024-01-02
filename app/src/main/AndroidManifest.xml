@@ -35,29 +35,23 @@
             android:exported="false" />
         <activity
             android:name=".Bill.BillActivity"
-            android:exported="false"
-            android:parentActivityName=".Home.HomeActivity" />
+            android:exported="false" />
         <activity
             android:name=".Pay.PayActivity"
             android:exported="false"
-            android:parentActivityName=".Home.HomeActivity"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".FavoriteProduct.FavoriteProductActivity"
-            android:exported="false"
-            android:parentActivityName=".Home.HomeActivity" />
+            android:exported="false" />
         <activity
             android:name=".User.InfoUserActivity"
-            android:exported="false"
-            android:parentActivityName=".Home.HomeActivity" />
+            android:exported="false" />
         <activity
             android:name=".Category.CategoryProductActivity"
-            android:exported="false"
-            android:parentActivityName=".Home.HomeActivity" />
+            android:exported="false" />
         <activity
             android:name=".Product.DetailProductActivity"
-            android:exported="false"
-            android:parentActivityName=".Home.HomeActivity" />
+            android:exported="false" />
         <activity
             android:name=".Cart.CartActivity"
             android:exported="false" />

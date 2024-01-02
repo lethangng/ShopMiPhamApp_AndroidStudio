@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     tools:context=".Cart.CartActivity">
     <RelativeLayout
         android:id="@+id/wrap_header"
@@ -56,12 +57,25 @@
             android:src="@drawable/baseline_chat_24" />
     </RelativeLayout>
 
+    <TextView
+        android:id="@+id/tv_cart_null"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Giỏ hàng trống"
+        android:textStyle="bold"
+        android:textSize="30sp"
+        android:gravity="center_horizontal"
+        android:layout_marginTop="30dp"
+        android:layout_below="@+id/wrap_header"
+        android:textColor="@color/gray"/>
+
     <androidx.core.widget.NestedScrollView
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:layout_below="@+id/wrap_header"
         android:layout_marginBottom="50dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rcv_cart"
             android:layout_width="match_parent"
@@ -100,7 +114,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_marginTop="15dp"
-            android:layout_marginEnd="15dp"
+            android:layout_marginEnd="5dp"
             android:layout_toStartOf="@+id/tv_buy"
             android:text="0đ"
             android:textColor="@color/red" />

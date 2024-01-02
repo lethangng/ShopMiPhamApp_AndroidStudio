@@ -15,14 +15,14 @@ public interface BillDAO {
     long insertBill(Bill bill);
 
     @Query("SELECT * FROM bill WHERE userId= :userId")
-    List<Bill> getBillByUserId(int userId);
+    List<Bill> getBillByUserId(String userId);
 
     @Query("SELECT * FROM bill WHERE id= :billId")
-    Bill getBillById(int billId);
+    Bill getBillById(String billId);
 
     @Query("DELETE FROM bill")
     void deleteAllBills();
 
-    @Query("DELETE FROM sqlite_sequence WHERE name='bill'")
-    void resetBillId();
+//    @Query("DELETE FROM sqlite_sequence WHERE name='bill'")
+//    void resetBillId();
 }

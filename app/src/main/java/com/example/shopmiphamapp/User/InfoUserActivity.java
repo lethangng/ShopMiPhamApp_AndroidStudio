@@ -12,6 +12,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.shopmiphamapp.Database.User.User;
+import com.example.shopmiphamapp.Helper.Helper;
 import com.example.shopmiphamapp.Home.HomeActivity;
 import com.example.shopmiphamapp.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -37,10 +38,7 @@ public class InfoUserActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_info_user);
 
-//        String userJson = getIntent().getStringExtra("user");
-//        User user = new Gson().fromJson(userJson, User.class);
         FirebaseUser userFirebase = FirebaseAuth.getInstance().getCurrentUser();
-//        Uri uriImageUser = userFirebase.getPhotoUrl();
 
         User user = HomeActivity.userPublic;
 
@@ -48,22 +46,7 @@ public class InfoUserActivity extends AppCompatActivity {
         backNavigation();
         setUi(user, userFirebase);
 
-        btnResetPassword.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(InfoUserActivity.this, ChangePasswordActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        btnUpdateInfo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(InfoUserActivity.this, UpdateInfoActivity.class);
-                startActivity(intent);
-            }
-        });
-
+        initListener();
     }
 
     private void initUi() {
@@ -96,29 +79,27 @@ public class InfoUserActivity extends AppCompatActivity {
             imageUser.setImageResource(R.drawable.img_avatar);
         } else {
             Uri uriImageUser = userFirebase.getPhotoUrl();
-            Picasso.get()
-                    .load(uriImageUser)
-                    .placeholder(R.drawable.img_avatar) // Ảnh placeholder hiển thị trong quá trình tải
-                    .error(R.drawable.img_avatar) // Ảnh hiển thị khi có lỗi xảy ra
-                    .into(imageUser, new Callback() {
-                        @Override
-                        public void onSuccess() {
-                            // Quá trình tải ảnh thành công, ẩn ProgressBar và hiển thị ImageView
-                            progressBar.setVisibility(View.GONE);
-                            imageUser.setVisibility(View.VISIBLE);
-                        }
 
-                        @Override
-                        public void onError(Exception e) {
-                            // Xử lý khi có lỗi xảy ra trong quá trình tải ảnh
-                            progressBar.setVisibility(View.GONE);
-                            throw new RuntimeException(e);
-                        }
-                    });
+            Helper.loadImageUri(uriImageUser, imageUser, progressBar);
         }
+    }
 
+    private void initListener() {
+        btnResetPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(InfoUserActivity.this, ChangePasswordActivity.class);
+                startActivity(intent);
+            }
+        });
 
-
+        btnUpdateInfo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(InfoUserActivity.this, UpdateInfoActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     private void backNavigation() {

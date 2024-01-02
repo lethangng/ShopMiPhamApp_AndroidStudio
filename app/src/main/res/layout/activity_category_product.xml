@@ -47,6 +47,19 @@
             android:src="@drawable/baseline_chat_24" />
     </RelativeLayout>
 
+    <TextView
+        android:id="@+id/tv_null"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Danh sách sản phẩm yêu thích trống"
+        android:textStyle="bold"
+        android:textSize="30sp"
+        android:gravity="center_horizontal"
+        android:layout_marginTop="30dp"
+        android:paddingHorizontal="10dp"
+        android:layout_below="@+id/wrap_header"
+        android:textColor="@color/gray"/>
+
     <androidx.core.widget.NestedScrollView
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:layout_below="@+id/wrap_header"

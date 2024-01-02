@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -33,9 +34,9 @@ public class DetailBillActivity extends AppCompatActivity {
     private PayAdapter payAdapter;
     private ShopDatabase shopDatabase;
     private User user;
-    private int billId;
+    private String billId;
 
-    private TextView name, address, time, note, tv_price_total;
+    private TextView name, address, time, note, tv_price_total, payMethod;
     private Bill bill;
 
     @Override
@@ -46,8 +47,7 @@ public class DetailBillActivity extends AppCompatActivity {
         shopDatabase = ShopDatabase.getInstance(this);
         user = HomeActivity.userPublic;
 
-        String billIdJson = getIntent().getStringExtra("billId");
-        billId = new Gson().fromJson(billIdJson, Integer.class);
+        String billId = getIntent().getStringExtra("billId");
 
         bill = shopDatabase.billDAO().getBillById(billId);
 
@@ -65,6 +65,7 @@ public class DetailBillActivity extends AppCompatActivity {
         time = findViewById(R.id.time);
         note = findViewById(R.id.note);
         tv_price_total = findViewById(R.id.tv_price_total);
+        payMethod = findViewById(R.id.pay_method);
     }
 
     private void setUi() {
@@ -75,8 +76,10 @@ public class DetailBillActivity extends AppCompatActivity {
 
         time.setText(date);
         note.setText("Không có");
-        String totalMoney = Helper.formatPrice(bill.getTotalMonney());
+        String totalMoney = Helper.formatPrice(bill.getTotalMoney());
         tv_price_total.setText(totalMoney + "đ");
+
+        payMethod.setText(bill.getPayMethod());
     }
     private void backNavigation() {
         setSupportActionBar(toolbar);
@@ -102,12 +105,13 @@ public class DetailBillActivity extends AppCompatActivity {
 
     private List<PayItem> getListBill() {
         List<PayItem> list = new ArrayList<>();
-        List<Product_Bill> productBills = shopDatabase.productBillDAO().getListProductBill(billId);
+        List<Product_Bill> productBills = shopDatabase.productBillDAO().getListProductBill(bill.getId());
+//        Log.d("productBills", productBills.toString());
         for (Product_Bill productBill : productBills) {
             Product product = shopDatabase.productDAO().getProductById(productBill.getProductId());
-            String productType = shopDatabase.productTypeDAO().getProductTypeById(product.getProductId()).getName();
+            String productType = shopDatabase.productTypeDAO().getProductTypeById(product.getProductTypeId()).getName();
 
-            list.add(new PayItem(product.getImgProductURL(), product.getName(),
+            list.add(new PayItem(product.getImgUrl(), product.getName(),
                     productType, product.getPrice(), productBill.getQuantity()));
         }
 

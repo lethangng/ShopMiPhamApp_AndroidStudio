@@ -74,6 +74,7 @@ public class ReAuthenticateUserActivity extends AppCompatActivity {
                         progressBar.setVisibility(View.GONE);
                         if(task.isSuccessful()) {
                             Intent intent = new Intent(ReAuthenticateUserActivity.this, ChangePasswordActivity.class);
+                            Toast.makeText(ReAuthenticateUserActivity.this, "Xác thực người dùng thành công.", Toast.LENGTH_SHORT).show();
                             startActivity(intent);
                             finish();
                         } else {

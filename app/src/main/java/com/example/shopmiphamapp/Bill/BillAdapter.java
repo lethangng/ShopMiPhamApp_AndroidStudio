@@ -56,36 +56,23 @@ public class BillAdapter extends RecyclerView.Adapter<BillAdapter.BillViewHodel>
             return;
         }
 
-        Picasso.get()
-                .load(billItem.getImgURL())
-                .placeholder(R.drawable.layout_none) // Ảnh placeholder hiển thị trong quá trình tải
-                .error(R.drawable.layout_none) // Ảnh hiển thị khi có lỗi xảy ra
-                .into(holder.img_product, new Callback() {
-                    @Override
-                    public void onSuccess() {
-                        // Quá trình tải ảnh thành công, ẩn ProgressBar và hiển thị ImageView
-                        holder.progressBar.setVisibility(View.GONE);
-                        holder.img_product.setVisibility(View.VISIBLE);
-                    }
+        Helper.loadImage(billItem.getImgURL(), holder.img_product, holder.progressBar);
 
-                    @Override
-                    public void onError(Exception e) {
-                        // Xử lý khi có lỗi xảy ra trong quá trình tải ảnh
-                        holder.progressBar.setVisibility(View.GONE);
-                        throw new RuntimeException(e);
-                    }
-                });
+        String name = Helper.formatString(billItem.getProductName(), 25);
+        holder.tv_product_name.setText(name);
 
-//        holder.img_product.setImageResource(billItem.getImgId());
-        holder.tv_product_name.setText(billItem.getProductName());
         holder.tv_type_product.setText(billItem.getProductType());
-        String price = Helper.formatPrice(billItem.getPrice());
 
+        String price = Helper.formatPrice(billItem.getPrice());
         holder.tv_price.setText(price);
-        holder.tv_pay_count.setText("x" + String.valueOf(billItem.getCount()));
+
+        holder.tv_pay_count.setText("x" + billItem.getCount());
+
         String totalPrice = Helper.formatPrice(billItem.getTotalPrice());
         holder.total_price.setText(totalPrice);
-        holder.sum_product.setText(String.valueOf(billItem.getSumProduct()) + " sản phẩm");
+
+        String sumProduct = billItem.getSumProduct() + " sản phẩm";
+        holder.sum_product.setText(sumProduct);
 
         // Xu ly su kien click, duoc su dung o activity cha
         // Đặt ClickListener cho mục

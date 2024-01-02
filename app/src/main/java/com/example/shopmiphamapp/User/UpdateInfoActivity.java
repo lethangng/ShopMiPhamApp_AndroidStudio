@@ -1,5 +1,6 @@
 package com.example.shopmiphamapp.User;
 
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,7 +20,9 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.shopmiphamapp.Database.ShopDatabase;
 import com.example.shopmiphamapp.Database.User.User;
+import com.example.shopmiphamapp.Helper.Helper;
 import com.example.shopmiphamapp.Home.HomeActivity;
 import com.example.shopmiphamapp.Login.LoginActivity;
 import com.example.shopmiphamapp.R;
@@ -32,13 +35,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.firestore.WriteBatch;
 import com.makeramen.roundedimageview.RoundedImageView;
-import com.squareup.picasso.Callback;
-import com.squareup.picasso.Picasso;
 
 public class UpdateInfoActivity extends AppCompatActivity {
     private EditText name, phoneNumber, address;
@@ -61,10 +58,14 @@ public class UpdateInfoActivity extends AppCompatActivity {
     private User user;
     FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
+    private ShopDatabase shopDatabase;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_update_info);
+
+        shopDatabase = ShopDatabase.getInstance(this);
 
         initUi();
         user = HomeActivity.userPublic;
@@ -113,7 +114,6 @@ public class UpdateInfoActivity extends AppCompatActivity {
         } else {
             setImageAvatar(firebaseUser.getPhotoUrl());
         }
-//        Log.d("imageUri", String.valueOf(firebaseUser.getPhotoUrl()));
     }
 
     private void backNavigation() {
@@ -132,25 +132,7 @@ public class UpdateInfoActivity extends AppCompatActivity {
     }
 
     private void setImageAvatar(Uri urlImage) {
-        Picasso.get()
-                .load(urlImage)
-                .placeholder(R.drawable.layout_none) // Ảnh placeholder hiển thị trong quá trình tải
-                .error(R.drawable.layout_none) // Ảnh hiển thị khi có lỗi xảy ra
-                .into(imgAvatar, new Callback() {
-                    @Override
-                    public void onSuccess() {
-                        // Quá trình tải ảnh thành công, ẩn ProgressBar và hiển thị ImageView
-                        progressBarImage.setVisibility(View.GONE);
-                        imgAvatar.setVisibility(View.VISIBLE);
-                    }
-
-                    @Override
-                    public void onError(Exception e) {
-                        // Xử lý khi có lỗi xảy ra trong quá trình tải ảnh
-                        progressBarImage.setVisibility(View.GONE);
-                        throw new RuntimeException(e);
-                    }
-                });
+        Helper.loadImageUri(urlImage, imgAvatar, progressBarImage);
     }
 
     private void initListener() {
@@ -184,10 +166,10 @@ public class UpdateInfoActivity extends AppCompatActivity {
         btnUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                progressBar.setVisibility(View.VISIBLE);
                 String nameValue = name.getText().toString().trim();
                 String phoneNumberValue = phoneNumber.getText().toString().trim();
                 String addressValue = address.getText().toString().trim();
-//                Log.d("phoneNumberValue", phoneNumberValue);
 
                 boolean check = validate(nameValue, phoneNumberValue, addressValue);
                 if (!check) {
@@ -210,13 +192,13 @@ public class UpdateInfoActivity extends AppCompatActivity {
             return false;
         }
         if (phoneNumber.length() != 10) {
-            Log.d("sizePhone", String.valueOf(phoneNumber.length()));
             Toast.makeText(this, "Vui lòng nhâp đúng định dạng số điện thoại 10 số.", Toast.LENGTH_SHORT).show();
             return false;
         }
         return true;
     }
 
+    // Lấy Uri của ảnh trong Glaragy
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -233,7 +215,7 @@ public class UpdateInfoActivity extends AppCompatActivity {
     }
     private void uploadImage(Uri imageUri) {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        progressBar.setVisibility(View.VISIBLE);
+//        progressBar.setVisibility(View.VISIBLE);
         UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
                 .setPhotoUri(imageUri)
                 .build();
@@ -244,7 +226,9 @@ public class UpdateInfoActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<Void> task) {
                         progressBar.setVisibility(View.GONE);
                         if (task.isSuccessful()) {
-                            Toast.makeText(UpdateInfoActivity.this, "Cập nhập thành công.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(UpdateInfoActivity.this, "Cập nhập thành công. Vui lòng đăng xuất", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(UpdateInfoActivity.this, "Cập nhập thất bại.", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
@@ -253,53 +237,22 @@ public class UpdateInfoActivity extends AppCompatActivity {
     private void updateInfo(String name, String phoneNumber, String address, int gender) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-        // Tạo truy vấn
-        Query query = db.collection("user")
-                .whereEqualTo("username", firebaseUser.getEmail());
-
-        // Thực hiện truy vấn
-        query.get()
-                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+        DocumentReference userRef = db.collection("user").document(user.getId());
+        userRef.update("name", name, "phoneNumber", phoneNumber, "address", address, "gender", gender)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
-                    public void onSuccess(QuerySnapshot querySnapshot) {
-                        // Tạo một Batch để thực hiện các thao tác cập nhật
-                        WriteBatch batch = db.batch();
-
-                        // Lặp qua các tài liệu phù hợp
-                        for (QueryDocumentSnapshot document : querySnapshot) {
-                            // Lấy tham chiếu đến tài liệu
-                            DocumentReference docRef = document.getReference();
-
-                            // Cập nhật trường trong tài liệu
-                            batch.update(docRef, "name", name);
-                            batch.update(docRef, "phoneNumber", phoneNumber);
-                            batch.update(docRef, "address", address);
-                            batch.update(docRef, "gender", gender);
+                    public void onSuccess(Void unused) {
+                        progressBar.setVisibility(View.GONE);
+                        if (!checkUpdateImg) {
+                            Toast.makeText(UpdateInfoActivity.this, "Cập nhập thành công. Vui lòng đăng xuất.", Toast.LENGTH_SHORT).show();
                         }
-
-                        // Thực hiện Batch Writes
-                        batch.commit()
-                                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void aVoid) {
-                                        // Cập nhật thành công
-                                        // ...
-                                    }
-                                })
-                                .addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        // Xử lý khi cập nhật thất bại
-                                        throw new RuntimeException(e.toString());
-                                    }
-                                });
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        // Xử lý khi truy vấn thất bại
-                        throw new RuntimeException(e.toString());
+                        progressBar.setVisibility(View.GONE);
+                        Toast.makeText(UpdateInfoActivity.this, "Cập nhập thất bại.", Toast.LENGTH_SHORT).show();
                     }
                 });
     }

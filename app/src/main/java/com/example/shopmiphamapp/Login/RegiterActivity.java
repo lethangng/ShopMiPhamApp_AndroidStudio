@@ -29,6 +29,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -130,6 +131,17 @@ public class RegiterActivity extends AppCompatActivity {
         String confirmPassword = edtConfirmPassword.getText().toString().trim();
         String address = edtAddress.getText().toString().trim();
 
+        rdoGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                if (checkedId == R.id.rdo_male) {
+                    gender = 0;
+                } else if (checkedId == R.id.rdo_female) {
+                    gender = 1;
+                }
+            }
+        });
+
         boolean checkUser = validateUser(email, password, name, phoneNumber, confirmPassword, address);
         if (!checkUser) return;
 
@@ -141,8 +153,9 @@ public class RegiterActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         progressBar.setVisibility(View.GONE);
                         if (task.isSuccessful()) {
-//                            FirebaseUser user = mAuth.getCurrentUser();
-                            addUser(email, password, name, phoneNumber, address);
+                            FirebaseUser user = mAuth.getCurrentUser();
+                            String userId = user.getUid();
+                            addUser(userId, email, password, name, phoneNumber, address);
 
                             Intent intent = new Intent(RegiterActivity.this, LoginActivity.class);
                             startActivity(intent);
@@ -156,37 +169,25 @@ public class RegiterActivity extends AppCompatActivity {
                 });
     }
 
-    private void addUser(String username, String password, String name, String phoneNumber, String address) {
-        rdoGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                if (checkedId == R.id.rdo_male) {
-                    gender = 0;
-                } else if (checkedId == R.id.rdo_female) {
-                    gender = 1;
-                }
-            }
-        });
-
-        User user = new User(username, password,
+    private void addUser(String userId, String username, String password, String name, String phoneNumber, String address) {
+        User user = new User(userId, username, password,
                 "https://firebasestorage.googleapis.com/v0/b/shopmiphamapp.appspot.com/o/img_avatar.png?alt=media&token=a18fb5b2-37dc-47af-8a6d-861ece6ca6a1"
                 , gender, name, phoneNumber, address);
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("user").add(user).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+        db.collection("user").document(userId).set(user)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                        Toast.makeText(RegiterActivity.this, "Đăng ký thành công.", Toast.LENGTH_SHORT).show();
+                    public void onSuccess(Void unused) {
+                        Toast.makeText(RegiterActivity.this, "Đăng ký thành công!", Toast.LENGTH_SHORT).show();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        // Xử lý khi thêm thất bại
-                        throw new RuntimeException(e.toString());
+                        Toast.makeText(RegiterActivity.this, "Đăng ký thất bại!", Toast.LENGTH_SHORT).show();
                     }
-                });;
+                });
 
-//        ShopDatabase.getInstance(this).userDAO().insertUser(user);
     }
 
     private boolean validateUser(String email, String password, String name, String phoneNumber, String confirmPassword, String address) {

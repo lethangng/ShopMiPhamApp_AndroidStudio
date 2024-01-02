@@ -109,8 +109,8 @@ public class CategoryProductActivity extends AppCompatActivity {
         if (productTypeId != -1) {
             List<Product> products = shopDatabase.productDAO().getProductByProductTypeId(productTypeId);
             for(Product product: products) {
-                String productType = shopDatabase.productDAO().getProductType(product.getProductId());
-                listProduct.add(new ProductItem(product.getProductId(), product.getImgProductURL(),
+                String productType = shopDatabase.productDAO().getProductType(product.getId());
+                listProduct.add(new ProductItem(product.getId(), product.getImgUrl(),
                         product.getName(), productType, product.getPrice(), product.getSold()));
             }
         }

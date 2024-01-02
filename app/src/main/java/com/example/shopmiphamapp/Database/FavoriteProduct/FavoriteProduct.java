@@ -1,33 +1,43 @@
 package com.example.shopmiphamapp.Database.FavoriteProduct;
 
+import androidx.annotation.NonNull;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "favorite_product")
 public class FavoriteProduct {
-    @PrimaryKey(autoGenerate = true)
-    private int favoriteProductId;
-    private int userId;
+    @PrimaryKey
+    @NonNull
+    private String id;
+    private String userId;
     private int productId;
 
-    public FavoriteProduct(int userId, int productId) {
+    public FavoriteProduct(String id, String userId, int productId) {
+        this.id = id;
         this.userId = userId;
         this.productId = productId;
     }
 
-    public int getFavoriteProductId() {
-        return favoriteProductId;
+    @Ignore
+    public FavoriteProduct(String userId, int productId) {
+        this.userId = userId;
+        this.productId = productId;
+    }
+    @NonNull
+    public String getId() {
+        return id;
     }
 
-    public void setFavoriteProductId(int favoriteProductId) {
-        this.favoriteProductId = favoriteProductId;
+    public void setId(@NonNull String id) {
+        this.id = id;
     }
 
-    public int getUserId() {
+    public String getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 

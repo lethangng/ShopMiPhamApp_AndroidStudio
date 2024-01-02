@@ -28,7 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FavoriteProductActivity extends AppCompatActivity {
-    private TextView tvProductType;
+    private TextView tvProductType, tvNull;;
 
     private ProductAdapter productAdapter;
     private RecyclerView rcvProduct;
@@ -60,10 +60,16 @@ public class FavoriteProductActivity extends AppCompatActivity {
         tvProductType = findViewById(R.id.tv_product_type);
         rcvProduct = findViewById(R.id.rcv_product);
         toolbar = findViewById(R.id.back_navigation);
+        tvNull = findViewById(R.id.tv_null);
+        tvNull.setVisibility(View.GONE);
     }
 
     private void setUi() {
         tvProductType.setText("Sản phẩm yêu thích");
+        int countFavoriteProduct = shopDatabase.favoriteProductDAO().getFavoriteProduct(user.getId()).size();
+        if (countFavoriteProduct == 0) {
+            tvNull.setVisibility(View.VISIBLE);
+        }
     }
 
     private void backNavigation() {
@@ -101,7 +107,7 @@ public class FavoriteProductActivity extends AppCompatActivity {
             }
         });
 
-        // Xử lý khi favorite_product thay đổi thì recycView cũng phải thay đổi theo
+        // Xử lý khi favorite_product thay đổi thì rcv cũng phải thay đổi theo
         favoriteProductViewModel = new ViewModelProvider(this).get(FavoriteProductViewModel.class);
         favoriteProductViewModel.getListProductLiveData().observe(this, new Observer<List<ProductItem>>() {
             @Override
@@ -115,12 +121,12 @@ public class FavoriteProductActivity extends AppCompatActivity {
     private List<ProductItem> getListProduct() {
         List<ProductItem> listProduct = new ArrayList<>();
         if (user != null) {
-            List<FavoriteProduct> favoriteProducts = shopDatabase.favoriteProductDAO().getFavoriteProduct(user.getUserId());
+            List<FavoriteProduct> favoriteProducts = shopDatabase.favoriteProductDAO().getFavoriteProduct(user.getId());
             for (FavoriteProduct favoriteProduct : favoriteProducts) {
-                int productId = favoriteProduct.getFavoriteProductId();
+                int productId = favoriteProduct.getProductId();
                 Product product = shopDatabase.productDAO().getProductById(productId);
-                String productType = shopDatabase.productDAO().getProductType(product.getProductId());
-                listProduct.add(new ProductItem(product.getProductId(), product.getImgProductURL(), product.getName(), productType, product.getPrice(), product.getSold()));
+                String productType = shopDatabase.productDAO().getProductType(product.getId());
+                listProduct.add(new ProductItem(product.getId(), product.getImgUrl(), product.getName(), productType, product.getPrice(), product.getSold()));
             }
         }
         return listProduct;

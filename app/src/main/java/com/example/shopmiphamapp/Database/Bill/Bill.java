@@ -1,6 +1,9 @@
 package com.example.shopmiphamapp.Database.Bill;
 
+import androidx.annotation.NonNull;
+import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 import androidx.room.TypeConverter;
 
@@ -8,26 +11,59 @@ import java.util.Date;
 
 @Entity(tableName = "bill")
 public class Bill {
-    @PrimaryKey(autoGenerate = true)
-    private int id;
+    @PrimaryKey
+    @NonNull
+    private String id;
     private long purchaseDate;
     private String deliveryAddress;
-    private int totalMonney;
-    private int userId;
+    private int totalMoney;
+    private String userId;
+    private String note;
+    private String payMethod;
 
-    public Bill(long purchaseDate, String deliveryAddress, int totalMonney, int userId) {
+    public Bill(String id, long purchaseDate, String deliveryAddress, int totalMoney, String userId, String payMethod, String note) {
+        this.id = id;
         this.purchaseDate = purchaseDate;
         this.deliveryAddress = deliveryAddress;
-        this.totalMonney = totalMonney;
+        this.totalMoney = totalMoney;
         this.userId = userId;
+        this.payMethod = payMethod;
+        this.note = note;
     }
 
-    public int getId() {
+    @Ignore
+    public Bill(long purchaseDate, String deliveryAddress, int totalMoney, String userId, String payMethod, String note) {
+        this.purchaseDate = purchaseDate;
+        this.deliveryAddress = deliveryAddress;
+        this.totalMoney = totalMoney;
+        this.userId = userId;
+        this.payMethod = payMethod;
+        this.note = note;
+    }
+
+    @NonNull
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(@NonNull String id) {
         this.id = id;
+    }
+
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
+    }
+
+    public String getPayMethod() {
+        return payMethod;
+    }
+
+    public void setPayMethod(String payMethod) {
+        this.payMethod = payMethod;
     }
 
     public String getDeliveryAddress() {
@@ -41,31 +77,24 @@ public class Bill {
     public long getPurchaseDate() {
         return purchaseDate;
     }
-//    @TypeConverter
-//    public Date getPurcahseDate2() {
-//        return new Date(purchaseDate);
-//    }
-//    public void setPurchaseDate2(Date purchaseDate) {
-//        this.purchaseDate = purchaseDate.getTime();
-//    }
 
     public void setPurchaseDate(long purchaseDate) {
         this.purchaseDate = purchaseDate;
     }
 
-    public int getTotalMonney() {
-        return totalMonney;
+    public int getTotalMoney() {
+        return totalMoney;
     }
 
-    public void setTotalMonney(int totalMonney) {
-        this.totalMonney = totalMonney;
+    public void setTotalMoney(int totalMoney) {
+        this.totalMoney = totalMoney;
     }
 
-    public int getUserId() {
+    public String getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 }

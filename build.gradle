@@ -8,3 +8,8 @@ plugins {
     id 'com.android.library' version '8.0.2' apply false
     id 'com.google.gms.google-services' version '4.4.0' apply false
 }
+
+ext {
+    lifecycleVersion = '2.3.1'
+    roomVersion = '2.3.0'
+}
