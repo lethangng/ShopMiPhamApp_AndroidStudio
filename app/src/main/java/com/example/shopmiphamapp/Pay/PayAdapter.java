@@ -50,7 +50,6 @@ public class PayAdapter extends RecyclerView.Adapter<PayAdapter.PayViewHodel> {
         holder.tv_price.setText(price);
 
         holder.tv_pay_count.setText("x" + payItem.getCount());
-
     }
 
     @Override

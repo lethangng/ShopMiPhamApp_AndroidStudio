@@ -14,8 +14,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.shopmiphamapp.Helper.Helper;
 import com.example.shopmiphamapp.R;
-import com.squareup.picasso.Callback;
-import com.squareup.picasso.Picasso;
 import java.util.List;
 
 public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductViewHolder>  {
@@ -53,26 +51,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
             return;
         }
 
-        Picasso.get()
-                .load(productItem.getImage())
-                .placeholder(R.drawable.layout_none) // Ảnh placeholder hiển thị trong quá trình tải
-                .error(R.drawable.layout_none) // Ảnh hiển thị khi có lỗi xảy ra
-                .into(holder.imgProduct, new Callback() {
-                    @Override
-                    public void onSuccess() {
-                        // Quá trình tải ảnh thành công, ẩn ProgressBar và hiển thị ImageView
-                        holder.progressBar.setVisibility(View.GONE);
-                        holder.imgProduct.setVisibility(View.VISIBLE);
-                    }
-
-                    @Override
-                    public void onError(Exception e) {
-                        // Xử lý khi có lỗi xảy ra trong quá trình tải ảnh
-                        holder.progressBar.setVisibility(View.GONE);
-                        Log.d("errors", e.toString());
-                        throw new RuntimeException(e);
-                    }
-                });
+        Helper.loadImage(productItem.getImage(), holder.imgProduct, holder.progressBar);
 
 //        holder.imgProduct.setImageResource(R.drawable.product_1);
         String name = Helper.formatString(productItem.getName(), 25);

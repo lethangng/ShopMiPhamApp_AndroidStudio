@@ -14,12 +14,6 @@
 <!--        <item name="android:windowTranslucentStatus">true</item>-->
 <!--        <item name="android:windowTranslucentNavigation">true</item>-->
 <!--        <item name="android:statusBarColor">@color/lavender</item>-->
-
-        <item name="textInputStyle">@style/CustomTextInputLayout</item>
-    </style>
-    <style name="CustomTextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
-        <item name="boxStrokeColor">@android:color/white</item>
-        <!-- Customize other properties of TextInputLayout as needed -->
     </style>
     <style name="Theme.ShopMiPhamApp" parent="Base.Theme.ShopMiPhamApp" />
 </resources>

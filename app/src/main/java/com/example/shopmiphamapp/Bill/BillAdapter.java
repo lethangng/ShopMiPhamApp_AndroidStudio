@@ -11,14 +11,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.shopmiphamapp.Cart.CartAdapter;
-import com.example.shopmiphamapp.Cart.CartItem;
 import com.example.shopmiphamapp.Helper.Helper;
-import com.example.shopmiphamapp.Product.ProductAdapter;
-import com.example.shopmiphamapp.Product.ProductItem;
 import com.example.shopmiphamapp.R;
-import com.squareup.picasso.Callback;
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 

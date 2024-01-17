@@ -58,7 +58,7 @@
                         android:textColor="@color/lavender"
                         android:layout_marginBottom="15dp"/>
 
-                    <include layout="@layout/lauout_product"/>
+                    <include layout="@layout/layout_product"/>
 
                 </LinearLayout>
             </LinearLayout>

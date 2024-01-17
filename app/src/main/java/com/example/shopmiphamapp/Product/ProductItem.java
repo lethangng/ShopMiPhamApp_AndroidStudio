@@ -1,10 +1,5 @@
 package com.example.shopmiphamapp.Product;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
-import androidx.annotation.NonNull;
-
 public class ProductItem {
     private int productId;
     private String image;

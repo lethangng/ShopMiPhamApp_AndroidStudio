@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.shopmiphamapp.Database.Bill.Bill;
@@ -20,12 +21,11 @@ import com.example.shopmiphamapp.Helper.Helper;
 import com.example.shopmiphamapp.Home.HomeActivity;
 import com.example.shopmiphamapp.Pay.PayAdapter;
 import com.example.shopmiphamapp.Pay.PayItem;
+import com.example.shopmiphamapp.Product.DetailProductActivity;
 import com.example.shopmiphamapp.R;
 import com.google.gson.Gson;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class DetailBillActivity extends AppCompatActivity {
@@ -34,10 +34,10 @@ public class DetailBillActivity extends AppCompatActivity {
     private PayAdapter payAdapter;
     private ShopDatabase shopDatabase;
     private User user;
-    private String billId;
-
     private TextView name, address, time, note, tv_price_total, payMethod;
     private Bill bill;
+
+    private LinearLayout btnBuy;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +55,13 @@ public class DetailBillActivity extends AppCompatActivity {
         setUi();
         backNavigation();
         recyclerViewBill();
+
+        btnBuy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                handleBuy();
+            }
+        });
     }
 
     private void intiUi() {
@@ -66,6 +73,7 @@ public class DetailBillActivity extends AppCompatActivity {
         note = findViewById(R.id.note);
         tv_price_total = findViewById(R.id.tv_price_total);
         payMethod = findViewById(R.id.pay_method);
+        btnBuy = findViewById(R.id.btn_buy);
     }
 
     private void setUi() {
@@ -77,7 +85,7 @@ public class DetailBillActivity extends AppCompatActivity {
         time.setText(date);
         note.setText("Không có");
         String totalMoney = Helper.formatPrice(bill.getTotalMoney());
-        tv_price_total.setText(totalMoney + "đ");
+        tv_price_total.setText(totalMoney);
 
         payMethod.setText(bill.getPayMethod());
     }
@@ -116,5 +124,16 @@ public class DetailBillActivity extends AppCompatActivity {
         }
 
         return list;
+    }
+
+    private void handleBuy() {
+        // Lay ra san pham dau tien trong list product_bill
+        Product_Bill productBill = shopDatabase.productBillDAO().getListProductBill(bill.getId()).get(0);
+        String productIdJson = new Gson().toJson(productBill.getProductId());
+        Intent intent = new Intent(DetailBillActivity.this, DetailProductActivity.class);
+
+        // Gửi dữ liệu của mục bằng cách đính kèm nó như một Extra
+        intent.putExtra("productId", productIdJson);
+        startActivity(intent);
     }
 }

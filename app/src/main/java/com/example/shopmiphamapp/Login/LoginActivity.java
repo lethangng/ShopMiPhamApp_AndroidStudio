@@ -133,30 +133,8 @@ public class LoginActivity extends AppCompatActivity {
                         }
                     }
                 });
-
-
-//        User user = checkLogin(username, password);
-//        String userJson = new Gson().toJson(user);
-//
-//        if (user != null) {
-//            Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
-//            intent.putExtra("user", userJson);
-//            startActivity(intent);
-//        } else {
-//            Toast.makeText(LoginActivity.this, "Tài khoản hoặc mật khẩu không đúng!", Toast.LENGTH_LONG).show();
-//        }
     }
 
-
-//    private User checkLogin(String username, String password) {
-//        User user = ShopDatabase.getInstance(this).userDAO().checkUser(username);
-//        if (user != null) {
-//            if (password.equals(user.getPassword())) {
-//                return user;
-//            }
-//        }
-//        return null;
-//    }
 
     private boolean validateUser(String email, String password) {
         if (TextUtils.isEmpty(email) || TextUtils.isEmpty(password)) {
