@@ -17,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.widget.Toolbar;
 
+import com.example.shopmiphamapp.Database.ShopDatabase;
 import com.example.shopmiphamapp.Home.HomeActivity;
 import com.example.shopmiphamapp.Login.LoginActivity;
 import com.example.shopmiphamapp.R;
@@ -65,6 +66,7 @@ public class ChangePasswordActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 FirebaseAuth.getInstance().signOut();
+                ShopDatabase.destroyInstance();
                 Intent intent = new Intent(ChangePasswordActivity.this, LoginActivity.class);
                 startActivity(intent);
                 finishAffinity();

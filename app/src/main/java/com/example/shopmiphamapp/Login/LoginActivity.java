@@ -23,6 +23,7 @@ import android.widget.Toast;
 
 import com.example.shopmiphamapp.Database.ShopDatabase;
 import com.example.shopmiphamapp.Database.User.User;
+import com.example.shopmiphamapp.Helper.Helper;
 import com.example.shopmiphamapp.Home.HomeActivity;
 import com.example.shopmiphamapp.R;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -139,6 +140,10 @@ public class LoginActivity extends AppCompatActivity {
     private boolean validateUser(String email, String password) {
         if (TextUtils.isEmpty(email) || TextUtils.isEmpty(password)) {
             Toast.makeText(this, "Vui lòng nhâp đầy đủ thông tin.", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if (!Helper.validateEmail(email)) {
+            Toast.makeText(this, "Vui lòng nhâp đúng định dạng email.", Toast.LENGTH_SHORT).show();
             return false;
         }
         return true;

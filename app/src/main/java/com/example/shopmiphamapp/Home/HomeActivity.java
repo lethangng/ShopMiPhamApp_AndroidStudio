@@ -104,6 +104,14 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
                     userPublic = shopDatabase.userDAO().getUser(userFirebase.getUid());
 
+                    // Truong hop admin xoa nguoi dung tren sever nhung local van luu nguoi dung => Văng bug
+                    if (userPublic == null) {
+                        Toast.makeText(HomeActivity.this, "Vui lòng đăng nhập lại!", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(HomeActivity.this, LoginActivity.class);
+                        startActivity(intent);
+                        finishAffinity();
+                    }
+
                     setUi();
 
                     navigateLeft();

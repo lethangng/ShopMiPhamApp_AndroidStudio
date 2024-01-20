@@ -140,6 +140,7 @@ public class UpdateInfoActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 FirebaseAuth.getInstance().signOut();
+                ShopDatabase.destroyInstance();
                 Intent intent = new Intent(UpdateInfoActivity.this, LoginActivity.class);
                 startActivity(intent);
                 finishAffinity();
@@ -153,6 +154,7 @@ public class UpdateInfoActivity extends AppCompatActivity {
                 } else if (checkedId == R.id.rdo_female) {
                     gender = 1;
                 }
+//                Log.d(">>>", gender + "");
             }
         });
         imgAvatar.setOnClickListener(new View.OnClickListener() {

@@ -1,18 +1,27 @@
 package com.example.shopmiphamapp.Helper;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.net.Uri;
 import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+
+import com.example.shopmiphamapp.Database.ShopDatabase;
+import com.example.shopmiphamapp.Login.LoginActivity;
 import com.example.shopmiphamapp.R;
+import com.example.shopmiphamapp.User.ChangePasswordActivity;
+import com.google.firebase.auth.FirebaseAuth;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Helper {
     public static String formatPrice(int price) {
@@ -106,5 +115,20 @@ public class Helper {
             progressLayout.setVisibility(View.GONE);
             progressBar.setVisibility(View.GONE);
         }
+    }
+
+    public static boolean validatePhoneNumber(String phoneNumber) {
+        String regex = "(03|05|07|08|09|01[2689])([0-9]{8})\\b";
+        if (phoneNumber.length() < 0 || phoneNumber.length() > 10) return false;
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(phoneNumber);
+        return matcher.matches();
+    }
+
+    public static boolean validateEmail(String email) {
+        String regex = "([a-z0-9_\\.-]+)@([\\da-z\\.-]+)\\.([a-z\\.]{2,6})";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(email);
+        return matcher.matches();
     }
 }

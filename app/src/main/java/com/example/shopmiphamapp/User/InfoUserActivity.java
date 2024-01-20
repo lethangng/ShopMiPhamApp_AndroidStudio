@@ -32,6 +32,8 @@ public class InfoUserActivity extends AppCompatActivity {
 
     private ImageButton btnUpdateInfo;
 
+    private User user;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,11 +42,11 @@ public class InfoUserActivity extends AppCompatActivity {
 
         FirebaseUser userFirebase = FirebaseAuth.getInstance().getCurrentUser();
 
-        User user = HomeActivity.userPublic;
+        user = HomeActivity.userPublic;
 
         initUi();
         backNavigation();
-        setUi(user, userFirebase);
+        setUi(userFirebase);
 
         initListener();
     }
@@ -62,16 +64,16 @@ public class InfoUserActivity extends AppCompatActivity {
         btnUpdateInfo = findViewById(R.id.btn_update_info);
     }
 
-    private void setUi(User user, FirebaseUser userFirebase) {
+    private void setUi(FirebaseUser userFirebase) {
         username.setText(user.getUsername());
         name.setText(user.getName());
         phone_number.setText(user.getPhoneNumber());
         address.setText(user.getAddress());
-        int gender = user.getGender();
-        if (gender == 1) {
-            this.gender.setText("Nữ");
+        int genderValue = user.getGender();
+        if (genderValue == 1) {
+            gender.setText("Nữ");
         } else {
-            this.gender.setText("Nam");
+            gender.setText("Nam");
         }
 
         if (userFirebase.getPhotoUrl() == null) {
